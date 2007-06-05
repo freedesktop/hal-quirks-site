@@ -1,0 +1,49 @@
+<html>
+<head>
+<title>Sleep Quirk Debugger</title>
+<link rel="stylesheet" href="style.css" type="text/css" media="screen"/>
+</head>
+<body>
+
+<table align="center" class="title">
+<tr>
+ <td><img src="img/keyboard-shortcuts.png"/></td>
+ <td width="90%" valign="middle"><p class="title">Sleep Quirk Debugger</p></td>
+ <td><img src="img/keyboard-shortcuts.png"/></td>
+</tr>
+</table>
+<p>Back to the <a href="quirk-keymap-index.html">main keymap page</a></p>
+
+<h1>Check Latest Vendor List</h1>
+
+<p>You can check to see if your keyboard is already listed using the gitweb interface.
+You can see the very latest vendor files here:</p>
+
+<ul>
+<li><a href="http://gitweb.freedesktop.org/?p=hal-info.git;a=blob;f=fdi/information/10freedesktop/30-keymap-lenovo.fdi">LENOVO</a></li>
+<li><a href="http://gitweb.freedesktop.org/?p=hal-info.git;a=blob;f=fdi/information/10freedesktop/30-keymap-misc.fdi">Others</a></li>
+</ul>
+
+<p>
+If you click on any of the fdi files you'll find matches like this:
+</p>
+
+<pre>
+      &lt;match key="/org/freedesktop/Hal/devices/computer:system.hardware.vendor" prefix="LENOVO"&gt;
+        &lt;match key="/org/freedesktop/Hal/devices/computer:smbios.system.version" contains="3000"&gt;
+          &lt;append key="input.keymap.data" type="strlist"&gt;e016:wlan&lt;/append&gt; &lt;!-- Fn+F5 wireless --&gt;
+          &lt;append key="input.keymap.data" type="strlist"&gt;e017:sleep&lt;/append&gt; &lt;!-- Fn+F4 suspend --&gt;
+          &lt;append key="input.keymap.data" type="strlist"&gt;e018:suspend&lt;/append&gt; &lt;!-- Fn+F12 hibernate --&gt;
+          &lt;append key="info.capabilities" type="strlist"&gt;input.keymap&lt;/append&gt;
+        &lt;/match&gt;
+      &lt;/match&gt;
+</pre>
+
+<p>
+So you can see the different quirks in operation.
+</p>
+
+<p>Back to the <a href="quirk-keymap-index.html">main keymap page</a></p>
+
+</body>
+</html>

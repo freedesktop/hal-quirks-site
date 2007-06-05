@@ -1,0 +1,66 @@
+<html>
+<head>
+<title>Sleep Quirk Debugger</title>
+<link rel="stylesheet" href="style.css" type="text/css" media="screen"/>
+</head>
+<body>
+
+<table align="center" class="title">
+<tr>
+ <td><img src="img/gpm-suspend.png"/></td>
+ <td width="90%" valign="middle"><p class="title">Sleep Quirk Debugger</p></td>
+ <td><img src="img/gpm-suspend.png"/></td>
+</tr>
+</table>
+<p>Back to the <a href="quirk-suspend-index.html">main suspend page</a></p>
+
+<h1>Check Latest Vendor List</h1>
+
+<p>You can check to see if your laptop is already listed using the gitweb interface.
+You can see the very latest vendor files here:</p>
+
+<ul>
+<li><a href="http://gitweb.freedesktop.org/?p=hal-info.git;a=blob;f=fdi/information/10freedesktop/20-video-quirk-pm-acer.fdi">ACER</a></li>
+<li><a href="http://gitweb.freedesktop.org/?p=hal-info.git;a=blob;f=fdi/information/10freedesktop/20-video-quirk-pm-apple.fdi">Apple</a></li>
+<li><a href="http://gitweb.freedesktop.org/?p=hal-info.git;a=blob;f=fdi/information/10freedesktop/20-video-quirk-pm-asus.fdi">Asus</a></li>
+<li><a href="http://gitweb.freedesktop.org/?p=hal-info.git;a=blob;f=fdi/information/10freedesktop/20-video-quirk-pm-dell.fdi">Dell</a></li>
+<li><a href="http://gitweb.freedesktop.org/?p=hal-info.git;a=blob;f=fdi/information/10freedesktop/20-video-quirk-pm-fujitsu.fdi">Fujitsu</a></li>
+<li><a href="http://gitweb.freedesktop.org/?p=hal-info.git;a=blob;f=fdi/information/10freedesktop/20-video-quirk-pm-hp.fdi">HP</a></li>
+<li><a href="http://gitweb.freedesktop.org/?p=hal-info.git;a=blob;f=fdi/information/10freedesktop/20-video-quirk-pm-ibm.fdi">IBM</a></li>
+<li><a href="http://gitweb.freedesktop.org/?p=hal-info.git;a=blob;f=fdi/information/10freedesktop/20-video-quirk-pm-lenovo.fdi">LENOVO</a></li>
+<li><a href="http://gitweb.freedesktop.org/?p=hal-info.git;a=blob;f=fdi/information/10freedesktop/20-video-quirk-pm-sony.fdi">SONY</a></li>
+<li><a href="http://gitweb.freedesktop.org/?p=hal-info.git;a=blob;f=fdi/information/10freedesktop/20-video-quirk-pm-toshiba.fdi">Toshiba</a></li>
+<li><a href="http://gitweb.freedesktop.org/?p=hal-info.git;a=blob;f=fdi/information/10freedesktop/20-video-quirk-pm-misc.fdi">Others</a></li>
+</ul>
+
+<p>
+If you click on any of the fdi files you'll find matches like this:
+</p>
+
+<pre>
+     &lt;match key="system.hardware.vendor" prefix="Apple"&gt;
+       &lt;match key="system.hardware.product" string="MacBook1,1"&gt;
+         &lt;merge key="power_management.quirk.vbestate_restore" type="bool"&gt;true&lt;/merge&gt;
+       &lt;/match&gt;
+       &lt;match key="system.hardware.product" string="MacBookPro2,2"&gt;
+         &lt;merge key="power_management.quirk.s3_bios" type="bool"&gt;true&lt;/merge&gt;
+         &lt;merge key="power_management.quirk.s3_mode" type="bool"&gt;true&lt;/merge&gt;
+       &lt;/match&gt;
+     &lt;/match&gt;</pre>
+<p>
+So you can see the different quirks in operation.
+</p>
+
+<h2>Finding the correct quirk</h2>
+<p>
+Very often vendors with similar models have the same quirk, so for instance an IBM T61 may have the same quirks as an IBM T62, and the easiest thing to do is to just copy the t61 entry in <code>/usr/share/hal/fdi/information/10freedesktop/20-video-quirk-pm-ibm.fdi</code>.
+</p>
+
+<p>
+If you do not know what quirk you need to use, or the quirk does not work with your system, please open a terminal as root, and then experiment just trying <a href="quirk-suspend-try.html">pm-suspend with different options</a>.
+</p>
+
+<p>Back to the <a href="quirk-suspend-index.html">main suspend page</a></p>
+
+</body>
+</html>

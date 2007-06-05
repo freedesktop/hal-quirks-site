@@ -1,0 +1,309 @@
+<html>
+<head>
+<title>Sleep Quirk Debugger</title>
+<link rel="stylesheet" href="style.css" type="text/css" media="screen"/>
+<script language="JavaScript" type="text/javascript" src="quirk-suspend-debug.js"></script>
+</head>
+<body>
+
+<table align="center" class="title">
+<tr>
+ <td><img src="img/gpm-suspend.png"/></td>
+ <td width="90%" valign="middle"><p class="title">Sleep Quirk Debugger</p></td>
+ <td><img src="img/gpm-suspend.png"/></td>
+</tr>
+</table>
+<p>Back to the <a href="quirk-suspend-index.html">main suspend page</a></p>
+
+<h1>Checking common system problems</h1>
+
+<p>What distro are you using?</p>
+<table width="100%">
+<tr>
+ <td id="distro_data" width="50%">
+  <input type="radio" name="distro_data_radio" onChange="check_distro ('distro');">Fedora 7<br>
+  <input type="radio" name="distro_data_radio" onChange="check_distro ('distro');">Mandriva Linux 2007 Spring<br>
+  <input type="radio" name="distro_data_radio" onChange="check_distro ('distro');">RHEL 5<br>
+  <input type="radio" name="distro_data_radio" onChange="check_distro ('distro');">Other
+ </td>
+ <td><img id="distro_img" src="img/unknown.png"/></td>
+ <td><p id="distro_info"></p></td>
+</tr>
+</table>
+
+<p>Kernel Version (output of <code>uname -r</code>)</p>
+<table width="100%">
+<tr>
+ <td width="50%"><input id="kernel_data" type="text" onChange="check_kernel ('kernel');"></input></td>
+ <td><img id="kernel_img" src="img/unknown.png"/></td>
+ <td><p id="kernel_info"></p></td>
+</tr>
+</table>
+
+<p>The hal-info version. You can easily get this using:</p>
+<pre>
+rpm -q hal-info | cut -f3 -d"-"
+</pre>
+<table width="100%">
+<tr>
+ <td width="50%"><input id="hal_info_data" type="text" onChange="check_hal_info ('hal_info');"></input></td>
+ <td><img id="hal_info_img" src="img/unknown.png"/></td>
+ <td><p id="hal_info_info"></p></td>
+</tr>
+</table>
+
+<p>Are you using the proprietary NVIDIA driver?</p>
+<table width="100%">
+<tr>
+ <td id="nvidia_data" width="50%">
+  <input type="radio" name="nvidia_data_radio" onChange="check_nvidia ('nvidia');">No<br>
+  <input type="radio" name="nvidia_data_radio" onChange="check_nvidia ('nvidia');">Yes<br>
+  <input type="radio" name="nvidia_data_radio" onChange="check_nvidia ('nvidia');">Not Sure
+ </td>
+ <td><img id="nvidia_img" src="img/unknown.png"/></td>
+ <td><p id="nvidia_info"></p></td>
+</tr>
+</table>
+
+<p>Are you using the proprietary ATI driver?</p>
+<table width="100%">
+<tr>
+ <td id="ati_data" width="50%">
+  <input type="radio" name="ati_data_radio" onChange="check_ati ('ati');">No<br>
+  <input type="radio" name="ati_data_radio" onChange="check_ati ('ati');">Yes<br>
+  <input type="radio" name="ati_data_radio" onChange="check_ati ('ati');">Not Sure
+ </td>
+ <td><img id="ati_img" src="img/unknown.png"/></td>
+ <td><p id="ati_info"></p></td>
+</tr>
+</table>
+
+<p>Are you using a broadcom <code>b44</code> network device?</p>
+<table width="100%">
+<tr>
+ <td id="broadcom_data" width="50%">
+  <input type="radio" name="broadcom_data_radio" onChange="check_broadcom ('broadcom');">No<br>
+  <input type="radio" name="broadcom_data_radio" onChange="check_broadcom ('broadcom');">Yes<br>
+  <input type="radio" name="broadcom_data_radio" onChange="check_broadcom ('broadcom');">Not Sure
+ </td>
+ <td><img id="broadcom_img" src="img/unknown.png"/></td>
+ <td><p id="broadcom_info"></p></td>
+</tr>
+</table>
+
+<p>Are you using ndiswrapper for your wireless network device?</p>
+<table width="100%">
+<tr>
+ <td id="ndiswrapper_data" width="50%">
+  <input type="radio" name="ndiswrapper_data_radio" onChange="check_ndiswrapper ('ndiswrapper');">No<br>
+  <input type="radio" name="ndiswrapper_data_radio" onChange="check_ndiswrapper ('ndiswrapper');">Yes<br>
+  <input type="radio" name="ndiswrapper_data_radio" onChange="check_ndiswrapper ('ndiswrapper');">Not Sure
+ </td>
+ <td><img id="ndiswrapper_img" src="img/unknown.png"/></td>
+ <td><p id="ndiswrapper_info"></p></td>
+</tr>
+</table>
+
+<p>Are you using the old <code>i810</code> intel driver?</p>
+<table width="100%">
+<tr>
+ <td id="intel_data" width="50%">
+  <input type="radio" name="intel_data_radio" onChange="check_intel ('intel');">No<br>
+  <input type="radio" name="intel_data_radio" onChange="check_intel ('intel');">Yes<br>
+  <input type="radio" name="intel_data_radio" onChange="check_intel ('intel');">Not Sure
+ </td>
+ <td><img id="intel_img" src="img/unknown.png"/></td>
+ <td><p id="intel_info"></p></td>
+</tr>
+</table>
+
+<p>Are you using the suspend2?</p>
+<table width="100%">
+<tr>
+ <td id="suspend2_data" width="50%">
+  <input type="radio" name="suspend2_data_radio" onChange="check_suspend2 ('suspend2');">No<br>
+  <input type="radio" name="suspend2_data_radio" onChange="check_suspend2 ('suspend2');">Yes<br>
+ </td>
+ <td><img id="suspend2_img" src="img/unknown.png"/></td>
+ <td><p id="suspend2_info"></p></td>
+</tr>
+</table>
+
+<p>Is <code>mem</code> present in <code>/sys/power/state</code>?</p>
+<table width="100%">
+<tr>
+ <td id="kernelstate_data" width="50%">
+  <input type="radio" name="kernelstate_data_radio" onChange="check_kernelstate ('kernelstate');">No<br>
+  <input type="radio" name="kernelstate_data_radio" onChange="check_kernelstate ('kernelstate');">Yes
+ </td>
+ <td><img id="kernelstate_img" src="img/unknown.png"/></td>
+ <td><p id="kernelstate_info"></p></td>
+</tr>
+</table>
+
+<p>Does HAL recognise the suspend facility? You can check this by checking the output of:</p>
+<pre>
+ hal-get-property --udi /org/freedesktop/Hal/devices/computer --key power_management.can_suspend
+</pre>
+<table width="100%">
+<tr>
+ <td id="halproperty_data" width="50%">
+  <input type="radio" name="halproperty_data_radio" onChange="check_halproperty ('halproperty');">No<br>
+  <input type="radio" name="halproperty_data_radio" onChange="check_halproperty ('halproperty');">Yes
+ </td>
+ <td><img id="halproperty_img" src="img/unknown.png"/></td>
+ <td><p id="halproperty_info"></p></td>
+</tr>
+</table>
+
+<p>If you log in as root and issue 'pm-suspend' does the laptop power down?</p>
+<table width="100%">
+<tr>
+ <td id="pmutils_data" width="50%">
+  <input type="radio" name="pmutils_data_radio" onChange="check_pmutils ('pmutils');">No<br>
+  <input type="radio" name="pmutils_data_radio" onChange="check_pmutils ('pmutils');">Yes
+ </td>
+ <td><img id="pmutils_img" src="img/unknown.png"/></td>
+ <td><p id="pmutils_info"></p></td>
+</tr>
+</table>
+
+<p>Is the <code>ipw3945d</code> process running?</p>
+<table width="100%">
+<tr>
+ <td id="ipw3945d_data" width="50%">
+  <input type="radio" name="ipw3945d_data_radio" onChange="check_ipw3945d ('ipw3945d');">No<br>
+  <input type="radio" name="ipw3945d_data_radio" onChange="check_ipw3945d ('ipw3945d');">Yes<br>
+  <input type="radio" name="ipw3945d_data_radio" onChange="check_ipw3945d ('ipw3945d');">Not Sure
+ </td>
+ <td><img id="ipw3945d_img" src="img/unknown.png"/></td>
+ <td><p id="ipw3945d_info"></p></td>
+</tr>
+</table>
+
+<p>Is the <code>iwl3945</code> module loaded?</p>
+<table width="100%">
+<tr>
+ <td id="iwl3945_data" width="50%">
+  <input type="radio" name="iwl3945_data_radio" onChange="check_iwl3945 ('iwl3945');">No<br>
+  <input type="radio" name="iwl3945_data_radio" onChange="check_iwl3945 ('iwl3945');">Yes<br>
+  <input type="radio" name="iwl3945_data_radio" onChange="check_iwl3945 ('iwl3945');">Not Sure
+ </td>
+ <td><img id="iwl3945_img" src="img/unknown.png"/></td>
+ <td><p id="iwl3945_info"></p></td>
+</tr>
+</table>
+
+<p>Is the <code>kvm</code> module loaded?</p>
+<table width="100%">
+<tr>
+ <td id="kvm_data" width="50%">
+  <input type="radio" name="kvm_data_radio" onChange="check_kvm ('kvm');">No<br>
+  <input type="radio" name="kvm_data_radio" onChange="check_kvm ('kvm');">Yes<br>
+  <input type="radio" name="kvm_data_radio" onChange="check_kvm ('kvm');">Not Sure
+ </td>
+ <td><img id="kvm_img" src="img/unknown.png"/></td>
+ <td><p id="kvm_info"></p></td>
+</tr>
+</table>
+
+<p>Does the <code>suspending consoles...</code> message remain on the screen for over 10 seconds?</p>
+<table width="100%">
+<tr>
+ <td id="suspendingconsoles_data" width="50%">
+  <input type="radio" name="suspendingconsoles_data_radio" onChange="check_suspendingconsoles ('suspendingconsoles');">Yes<br>
+  <input type="radio" name="suspendingconsoles_data_radio" onChange="check_suspendingconsoles ('suspendingconsoles');">No
+ </td>
+ <td><img id="suspendingconsoles_img" src="img/unknown.png"/></td>
+ <td><p id="suspendingconsoles_info"></p></td>
+</tr>
+</table>
+
+<p>Does the laptop panel backlight power off, i.e. go black?</p>
+<table width="100%">
+<tr>
+ <td id="suspendbacklight_data" width="50%">
+  <input type="radio" name="resumebacklight_data_radio" onChange="check_suspendbacklight ('suspendbacklight');">No<br>
+  <input type="radio" name="resumebacklight_data_radio" onChange="check_suspendbacklight ('suspendbacklight');">Yes
+ </td>
+ <td><img id="suspendbacklight_img" src="img/unknown.png"/></td>
+ <td><p id="suspendbacklight_info"></p></td>
+</tr>
+</table>
+
+<p>When the laptop resumes, does the hard disk light flash? (you might need to type <code>find /</code>)</p>
+<table width="100%">
+<tr>
+ <td id="resumeflash_data" width="50%">
+  <input type="radio" name="resumeflash_data_radio" onChange="check_resumeflash ('resumeflash');">No<br>
+  <input type="radio" name="resumeflash_data_radio" onChange="check_resumeflash ('resumeflash');">Yes
+ </td>
+ <td><img id="resumeflash_img" src="img/unknown.png"/></td>
+ <td><p id="resumeflash_info"></p></td>
+</tr>
+</table>
+
+<p>When the laptop resumes, does the caps lock key keep flashing?</p>
+<table width="100%">
+<tr>
+ <td id="kernelpanic_data" width="50%">
+  <input type="radio" name="kernelpanic_data_radio" onChange="check_kernelpanic ('kernelpanic');">Yes<br>
+  <input type="radio" name="kernelpanic_data_radio" onChange="check_kernelpanic ('kernelpanic');">No
+ </td>
+ <td><img id="kernelpanic_img" src="img/unknown.png"/></td>
+ <td><p id="kernelpanic_info"></p></td>
+</tr>
+</table>
+
+<p>Does the laptop panel backlight power on, i.e. is there light being emitted?</p>
+<table width="100%">
+<tr>
+ <td id="resumebacklight_data" width="50%">
+  <input type="radio" name="resumebacklight_data_radio" onChange="check_resumebacklight ('resumebacklight');">No<br>
+  <input type="radio" name="resumebacklight_data_radio" onChange="check_resumebacklight ('resumebacklight');">Yes
+ </td>
+ <td><img id="resumebacklight_img" src="img/unknown.png"/></td>
+ <td><p id="resumebacklight_info"></p></td>
+</tr>
+</table>
+
+<p>Is the display corrupt, or flashes with coloured blocks?</p>
+<table width="100%">
+<tr>
+ <td id="vbestate_data" width="50%">
+  <input type="radio" name="vbestate_data_radio" onChange="check_vbestate ('vbestate');">Yes<br>
+  <input type="radio" name="vbestate_data_radio" onChange="check_vbestate ('vbestate');">No
+ </td>
+ <td><img id="vbestate_img" src="img/unknown.png"/></td>
+ <td><p id="vbestate_info"></p></td>
+</tr>
+</table>
+
+<p>Does <code>pm-suspend</code> fail in X but work from <code>tty1</code> (use ctrl-alt-f1)?</p>
+<table width="100%">
+<tr>
+ <td id="xorg_data" width="50%">
+  <input type="radio" name="xorg_data_radio" onChange="check_xorg ('xorg');">No<br>
+  <input type="radio" name="xorg_data_radio" onChange="check_xorg ('xorg');">Yes
+ </td>
+ <td><img id="xorg_img" src="img/unknown.png"/></td>
+ <td><p id="xorg_info"></p></td>
+</tr>
+</table>
+
+<p>Did resuming work with <code>--quirk-vbestate-restore</code> but after an XOrg update now does not?</p>
+<table width="100%">
+<tr>
+ <td id="novbestate_data" width="50%">
+  <input type="radio" name="novbestate_data_radio" onChange="check_novbestate ('novbestate');">No<br>
+  <input type="radio" name="novbestate_data_radio" onChange="check_novbestate ('novbestate');">Yes
+ </td>
+ <td><img id="novbestate_img" src="img/unknown.png"/></td>
+ <td><p id="novbestate_info"></p></td>
+</tr>
+</table>
+
+<p>Back to the <a href="quirk-suspend-index.html">main suspend page</a></p>
+
+</body>
+</html>

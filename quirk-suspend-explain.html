@@ -1,0 +1,62 @@
+<html>
+<head>
+<title>Sleep Quirk Debugger</title>
+<link rel="stylesheet" href="style.css" type="text/css" media="screen"/>
+</head>
+<body>
+
+<table align="center" class="title">
+<tr>
+ <td><img src="img/gpm-suspend.png"/></td>
+ <td width="90%" valign="middle"><p class="title">Sleep Quirk Debugger</p></td>
+ <td><img src="img/gpm-suspend.png"/></td>
+</tr>
+</table>
+<p>Back to the <a href="quirk-suspend-index.html">main suspend page</a></p>
+
+<h1>What are the quirks actually doing?</h1>
+
+<h3>DPMS On</h3>
+<p>
+ This option forces the video hardware to turn on the screen during resume.
+ Most video adapters turn on the screen themselves, but if you get a blank screen on resume, that can be turned back on by moving the mouse or typing then this option may be useful.
+</p>
+<h3>DPMS Suspend</h3>
+<p>
+ This option forces the video hardware to turn off the output device when suspending.
+ Most video adapters seem to do this correctly, but some leave the backlight on (with a blank screen) using lots and lots of power in the process. If you can see the backlight is on when you have successfully suspended you may need to use this option.
+</p>
+<h3>Radeon Off</h3>
+<p>
+ This option forces Radeon hardware to turn on the brightness DAC and also to turn on the backlight during resume. You only need to do this on some old ThinkPads of the '30 series (T30, X31, R32,... ) with Radeon video hardware.
+</p>
+<h3>S3 BIOS</h3>
+<p>
+ This option calls the video BIOS <b>during</b> S3 resume. Unfortunately, it is not always allowed to call the video BIOS at this point, so sometimes adding this option can actually break resume on some systems.
+</p>
+<h3>S3 MODE</h3>
+<p>
+ This option initializes the video card into a VGA text mode, and then uses the BIOS to set the video mode. On some systems S3 BIOS only initializes the video bios to text mode, and so both S3 BIOS and S3 MODE are needed.
+</p>
+<h3>VBE POST</h3>
+<p>
+ This option will attempt to run BIOS code located at <code>c000:0003</code> during resume.
+ This is the code also run by the system BIOS at boot in order to initialize the video hardware.
+</p>
+<h3>VBE Mode Restore</h3>
+<p>
+ This option will save and restore the current VESA mode which may be necessary to avoid X screen corruption.
+</p>
+<h3>VBE State Restore</h3>
+<p>
+ This option uses the VESA <code>0x4f0f</code> extensions to save and restore hardware state which may be invalid after suspend.
+</p>
+<h3>VGA Mode 3</h3>
+<p>
+ This option will try to re-enable the video card on resume.
+</p>
+
+<p>Back to the <a href="quirk-suspend-index.html">main suspend page</a></p>
+
+</body>
+</html>

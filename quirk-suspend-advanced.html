@@ -1,0 +1,136 @@
+<html>
+<head>
+<title>Sleep Quirk Debugger</title>
+<link rel="stylesheet" href="style.css" type="text/css" media="screen"/>
+</head>
+<body>
+
+<table align="center" class="title">
+<tr>
+ <td><img src="img/gpm-suspend.png"/></td>
+ <td width="90%" valign="middle"><p class="title">Sleep Quirk Debugger</p></td>
+ <td><img src="img/gpm-suspend.png"/></td>
+</tr>
+</table>
+<p>Back to the <a href="quirk-suspend-index.html">main suspend page</a></p>
+
+<h1>Advanced things to try</h1>
+
+<h2>Dodgy modules, suspend debugging procedure</h2>
+<p>
+ Resume problems are difficult to debug since there is no non-volatile storage available during resume.
+ The only hardware on a PC motherboard that retains information across reboots is the real time clock (RTC).
+</p>
+<p>
+<p>
+ In order to stimulate your suspend/resume process, enter the following commands (as root):
+</p>
+<pre>
+echo 1 > /sys/power/pm_trace
+pm-suspend
+</pre>
+<p>
+ At this point your computer should enter the suspend state within a few seconds.
+ Usually the power LED will slowly flash when in the suspended state.
+ When that has happened, initiate the resume process by pressing the power button.
+ If resume fails to complete, then press the power button until the computer turns off.
+ Power on your computer making sure that it loads the same kernel that exhibited the resume problem.
+ You have about 3 minutes to start this boot process before the information saved in the RTC gets corrupted.
+</p>
+<p>
+ Start a terminal and enter:
+</p>
+<pre>
+dmesg > dmesg.txt 
+cat dmesg.txt | grep "hash matches"
+hash matches drivers/base/power/resume.c:26
+hash matches device i2c-9191 
+</pre>
+<p>
+The <code>drivers/base/power/resume.c:<b>xx</b></code>.
+The file line code (<code>xx</code>) is typically:
+</p>
+<ul>
+<li>~28 or ~57 for <code>resume_device</code></li>
+<li>~67 or ~72 for <code>resume_device_early</code></li>
+</ul>
+The last <code>hash matches device</code> match is the likely culprit.
+</p>
+
+<p>
+The only way to prove that the driver may be at fault is to remove the module prior to initiating suspend using <code>rmmod</code>. Repeat as needed... 
+If you are using a very up to date kernel, this matter should be reported to the <a href="http://bugzilla.kernel.org/">kernel bugzilla</a>. If this module is not in the Linux kernel, then the module can be blacklisted using pm-utils.
+</p>
+<p>
+To do this, create a file in <code>/etc/pm/config.d/unload_modules</code> and add the following line:
+</p>
+<pre>
+SUSPEND_MODULES="iwl3945 mac80211"
+</pre>
+<p>
+You'll also need to make this script executable, which you can do using:
+</p>
+<pre>
+chmod +x /etc/pm/config.d/unload_modules
+</pre>
+
+<table>
+<tr>
+ <td><img src="img/dialog-information.png" alt="[NOTE]"></td>
+ <td>
+  <p>
+   You can safely ignore the <code>drivers/rtc/hctosys.c: unable to open rtc device (rtcX)</code> warning.
+   We are saving the hash data in the NVRAM in the RTC which has probably changed your machine clock.
+  </p>
+ </td>
+</tr>
+</table>
+
+<h3>64 bit processors</h3>
+<table>
+<tr>
+ <td><img src="img/emblem-important.png" alt="[NOTE]"></td>
+ <td>
+  <p>
+   This proceedure will <b>not</b> work on <code>X86_64</code> due to <code>CONFIG_PM_TRACE</code> being (for the moment) <code>X86_32</code> specific.
+   See <a href="http://lkml.org/lkml/2007/2/7/338">here</a> for more details and a kernel patch to work around the problem.
+   You'll have to recompile your kernel with this patch, so this is not a step for new users. Sorry.
+  The timeframe for merging this patch to the mainline kernel is probably post 2.6.22.
+  </p>
+ </td>
+</tr>
+</table>
+
+<h2>BIOS options</h2>
+<p>
+ Check your BIOS settings for options that mention sleep, suspend or hibernate.
+ If you have a setting for <code>allow suspend mode on legacy OS</code> try both on and off.
+ Turning this on can make some old ThinkPads resume when nothing else helps.
+</p>
+
+<h2>GRUB kernel options</h2>
+<p>
+ These are not standard quirks, but might get your system going.
+ If they do, email the <a href="http://acpi.sourceforge.net/">linux-acpi project</a> to fix the issue properly.
+</p>
+<p>
+ Try these GRUB entries, one line at a time.
+</p>
+<ul>
+<li><code>maxcpus=1</code></li>
+<li><code>vga=normal</code></li>
+<li><code>vga=792</code></li>
+<li><code>noapic</code></li>
+<li><code>nolapic</code></li>
+<li><code>noapic nolapic</code></li>
+<li><code>nolapic_timer</code></li>
+<li><code>nohz=off</code></li>
+<li><code>ec_burst=1</code></li>
+<li><code>nolapic ec_burst=1</code></li>
+<li><code>acpi=noirq ec_burst=1</code></li>
+</ul>
+
+<p>Back to the <a href="quirk-suspend-index.html">main suspend page</a></p>
+
+</body>
+</html>

@@ -1,0 +1,85 @@
+<html>
+<head>
+<title>Sleep Quirk Debugger</title>
+<link rel="stylesheet" href="style.css" type="text/css" media="screen"/>
+</head>
+<body>
+
+<table align="center" class="title">
+<tr>
+ <td><img src="img/gpm-suspend.png"/></td>
+ <td width="90%" valign="middle"><p class="title">Sleep Quirk Debugger</p></td>
+ <td><img src="img/gpm-suspend.png"/></td>
+</tr>
+</table>
+
+<p>Back to the <a href="quirk-suspend-index.html">main suspend page</a></p>
+
+<h1>Introduction</h1>
+<p>
+Lots of laptops and desktops already resume correctly from suspend and hibernate using model-specific information that is collected
+in the hal-info package.
+A big advantage of the hal-info approach is that the information can be updated frequently and is maintained in a distribution-neutral place.
+</p>
+
+<h2>Sleep nomenclature</h2>
+<p>
+<b>Standby</b> is the action where the CPU is held in a low power state but no data is saved to RAM or hard disk.
+It normally takes a a split second to standby and resume.
+You cannot remove the battery when on laptop power or work will be lost.
+</p>
+<p>
+<b>Suspend</b> is the action where the computer freezes all activity, and copies working data to RAM.
+It then turns off the screen, and goes into a low-power mode.
+It normally takes a few seconds to suspend and a few seconds to resume.
+You cannot remove the battery when on laptop power or work will be lost.
+</p>
+<p>
+<b>Hibernate</b> is the action where the computer freezes all activity and copies data to disk, turns off the screen and powers down.
+This takes over one minute for me to swap my ram to disk, and nearly 40 seconds to thaw.
+</p>
+<p>
+<b>Sleep</b> is a composite generic term which means all of the above states.
+</p>
+
+<h2>What happens when we suspend?</h2>
+<p>
+Suspend just puts the computer into a low power mode - what can possibly go wrong?
+It seems simple enough, all we really need to do is:
+</p>
+<ul>
+<li>Stop userspace</li>
+<li>Suspend drivers</li>
+</ul>
+<p>Time elapses...</p>
+<ul>
+<li>Resume drivers</li>
+<li>Start userspace</li>
+</ul>
+<p>
+If userspace cannot stop, or a driver cannot save and reload the state then the suspend fails.
+Unfortunatly, modules often need fixing to implement the suspend and resume hooks.
+</p>
+
+<h2>Problem</h2>
+<p>
+Sometimes we need to do the suspend and resume sequence a little different from ACPI suspend, something which is often called s3mode or s3bios.
+Some video cards also need to be given a 'kick' to get them to a sane state during resume.
+</p>
+<p>
+These machines are said to require a 'quirk' i.e. something needs to be done differently to the default to get them working.
+You may have already manually used xset, s3mode, vbetool and radiontool, but all these can be matched and specified in hal-info automatically.
+</p>
+
+<h2>Solution</h2>
+<p>
+New rules are being created every day, and updating the hal-info package might just get things working for you without doing anything else.
+DMI stands for Desktop Management Interface and is a common way of exposing model specific information on laptops and desktops.
+You can see the output doing <code>dmidecode</code> as the root user.
+This page will explain how to use HAL to create the rule using DMI data, and then send the rule to the HAL list so that other Linux users with the same laptop model will have their suspend 'just work'.
+</p>
+
+<p>Back to the <a href="quirk-suspend-index.html">main suspend page</a></p>
+
+</body>
+</html>

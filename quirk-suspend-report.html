@@ -1,0 +1,95 @@
+<html>
+<head>
+<title>Sleep Quirk Debugger</title>
+<link rel="stylesheet" href="style.css" type="text/css" media="screen"/>
+</head>
+<body>
+
+<table align="center" class="title">
+<tr>
+ <td><img src="img/gpm-suspend.png"/></td>
+ <td width="90%" valign="middle"><p class="title">Sleep Quirk Debugger</p></td>
+ <td><img src="img/gpm-suspend.png"/></td>
+</tr>
+</table>
+<p>Back to the <a href="quirk-suspend-index.html">main suspend page</a></p>
+
+<h1>Sending the data back to us</h1>
+<p>
+Please review this checklist before sending in quirks.
+</p>
+<ol>
+<li>Have you checked to see if the quirk is already present?</li>
+<li>Are you using an up-to-date kernel?</li>
+<li>If you using Intel video hardware, are you using the <code>intel</code> driver?</li>
+<li>Have you tried suspending multiple times with the new quirk?</li>
+<li>Have you tried suspending from X <b>and</b> <code>tty1</code>?</li>
+</ol>
+
+<p>
+To download the latest hal-info code, just do:
+</p>
+<pre>
+git clone git://git.freedesktop.org/git/hal-info
+</pre>
+<p>
+If you get the error <code>bash: git: command not found</code> you need to install the git source control system.
+You can do this doing:
+</p>
+<pre>
+[user@localhost ~]$ su -l
+Password: xxxxx
+[root@localhost ~]# yum -y install git gcc automake
+exit
+</pre>
+<p>
+Then we need to copy the changes you made to the file in <code>/usr/share/hal/fdi/information/10freedesktop/</code> to this local git tree.
+For example, open the local file using:
+</p>
+<pre>
+cd hal-info
+gedit fdi/information/10freedesktop/20-video-quirk-pm-ibm.fdi
+</pre>
+<p>
+Then we can copy the xml from the locally installed fdi (in <code>/usr/share</code>) to this local checked out version.
+Editing the file in the same way here allows us to generate a patch file that we can sent to the mailing list.
+</p>
+<p>
+Once you have edited your file, you can check the new addition using the checker scripts.
+These checker scripts run when you do
+</p>
+<pre>
+./autogen.sh
+make check
+...
+Validate XML in 20-video-quirk-pm-acer.fdi : ok
+Validate XML in 20-video-quirk-pm-apple.fdi : ok
+Validate XML in 20-video-quirk-pm-asus.fdi : ok
+Validate XML in 20-video-quirk-pm-dell.fdi : ok
+Validate XML in 20-video-quirk-pm-fujitsu.fdi : ok
+Validate XML in 20-video-quirk-pm-hp.fdi : ok
+Validate XML in 20-video-quirk-pm-ibm.fdi : ok
+Validate XML in 20-video-quirk-pm-lenovo.fdi : ok
+Validate XML in 20-video-quirk-pm-misc.fdi : ok
+Validate XML in 20-video-quirk-pm-sony.fdi : ok
+Validate XML in 20-video-quirk-pm-toshiba.fdi : ok
+...
+</pre>
+<p>
+This will check the syntax of all the quirks (and your modification).
+You can then generate the patch against git, by doing something like:
+</p>
+<pre>
+git pull
+git diff master > ../hal-info-quirk-ibm-t60.patch
+</pre>
+
+<p>
+Now the important bit: If that works, please send your matching data as an attachment to the <a href="mailto:hal@lists.freedesktop.org">mailing list</a> and we can add it to future updates to hal-info.
+This will make other laptops <i>just work</i> in the future and you can get a warm fuzzy feeling inside.
+</p>
+
+<p>Back to the <a href="quirk-suspend-index.html">main suspend page</a></p>
+
+</body>
+</html>

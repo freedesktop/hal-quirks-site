@@ -1,0 +1,54 @@
+/* Begin Typography & Colors */
+body {
+	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
+	}
+
+h1, h2, h3 {
+	font-family: 'Trebuchet MS', 'Lucida Grande', Verdana, Arial, Sans-Serif;
+	font-weight: bold;
+	}
+
+p.title {
+	text-align: center;
+	font-weight: bolder;
+	font-size: 20px;
+	}
+
+p.indextitle {
+	text-align: center;
+	font-weight: bolder;
+	font-size: 20px;
+	}
+
+table.title {
+	background-color: #f5f5ff;
+	}
+
+img {
+	border: 0;
+	}
+
+code {
+	font: 1.1em 'Courier New', Courier, Fixed;
+	}
+
+pre {
+	background: #eeeeee;
+	padding: 3;
+}
+
+a:hover {
+	color: #147;
+	text-decoration: underline;
+	}
+
+a {
+	color: #147;
+	text-decoration: none;
+	}
+
+td.title {
+	font-weight: bold;
+	}
+
+

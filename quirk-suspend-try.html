@@ -1,0 +1,160 @@
+<html>
+<head>
+<title>Sleep Quirk Debugger</title>
+<link rel="stylesheet" href="style.css" type="text/css" media="screen"/>
+</head>
+<body>
+
+<table align="center" class="title">
+<tr>
+ <td><img src="img/gpm-suspend.png"/></td>
+ <td width="90%" valign="middle"><p class="title">Sleep Quirk Debugger</p></td>
+ <td><img src="img/gpm-suspend.png"/></td>
+</tr>
+</table>
+<p>Back to the <a href="quirk-suspend-index.html">main suspend page</a></p>
+
+<h1>Trying quicks</h1>
+<h2>Using pm-suspend manually</h2>
+<p>
+While debeugging a machine, you may want to try quirks to see if the machine with survive a suspend-resume sequence.
+The <code>pm-suspend</code> and <code>pm-hibernate</code> scripts accept command line options that allow you to test new options.
+</p>
+<pre>
+[root@localhost ~]# pm-suspend --help
+pm-action [options]
+
+Options can change how the supend or hibernate is done.
+
+Possible actions are:
+
+  --quirk-dpms-on
+  --quirk-dpms-suspend
+  --quirk-radeon-off
+  --quirk-s3-bios
+  --quirk-s3-mode
+  --quirk-vbe-post
+  --quirk-vbemode-restore
+  --quirk-vbestate-restore
+  --quirk-vga-mode3
+</pre>
+<p>
+Multiple quirks are specified on the command line (in no particular order), e.g.:
+</p>
+<pre>
+pm-suspend --quirk-vbestate-restore --quirk-s3-bios --quirk-s3-mode
+</pre>
+<p>
+The options specified here will only be be used if added manually.
+</p>
+
+<h2>Trying quicks by editing FDI files</h2>
+<p>
+If the quirks are added to a local fdi file, then the quirks get used when invoking a suspend as a user using <code>gnome-power-manager</code>.
+The quirks have to be added this way to form a database of machine types to quirks.
+</p>
+<p>
+HAL quirk names correspond to the pm-suspend quirk properties in the following way:
+</p>
+<table>
+<thead><td class="title">HAL quirk name</td><td class="title">pm-suspend option</td></tr>
+<tr><td><code>power_management.quirk.s3_bios</code></td><td><code>--quirk-s3-bios</code></td></tr>
+<tr><td><code>power_management.quirk.s3_mode</code></td><td><code>--quirk-s3-mode</code></td></tr>
+<tr><td><code>power_management.quirk.dpms_suspend</code></td><td><code>--quirk-dpms-suspend</code></td></tr>
+<tr><td><code>power_management.quirk.dpms_on</code></td><td><code>--quirk-dpms-on</code></td></tr>
+<tr><td><code>power_management.quirk.vbestate_restore</code></td><td><code>--quirk-vbestate-restore</code></td></tr>
+<tr><td><code>power_management.quirk.vbemode_restore</code></td><td><code>--quirk-vbemode-restore</code></td></tr>
+<tr><td><code>power_management.quirk.vga_mode_3</code></td><td><code>--quirk-vga-mode3</code></td></tr>
+<tr><td><code>power_management.quirk.vbe_post</code></td><td><code>--quirk-vbe-post</code></td></tr>
+<tr><td><code>power_management.quirk.radeon_off</code></td><td><code>--quirk-radeon-off</code></td></tr>
+</table>
+
+<h3>Editing a local fdi file to test</h3>
+<p>
+Now we can edit an fdi file for a fictional IBM laptop.
+</p>
+<pre>
+[root@localhost ~]# cd /usr/share/hal/fdi/information/10freedesktop
+[root@localhost 10freedesktop]# ls 20-video-quirk-pm-*
+20-video-quirk-pm-acer.fdi     20-video-quirk-pm-ibm.fdi
+20-video-quirk-pm-apple.fdi    20-video-quirk-pm-lenovo.fdi
+20-video-quirk-pm-asus.fdi     20-video-quirk-pm-misc.fdi
+20-video-quirk-pm-dell.fdi     20-video-quirk-pm-sony.fdi
+20-video-quirk-pm-fujitsu.fdi  20-video-quirk-pm-toshiba.fdi
+20-video-quirk-pm-hp.fdi
+[root@localhost 10freedesktop]# gedit 20-video-quirk-pm-ibm.fdi
+</pre>
+<p>
+Now the following XML is displayed:
+</p>
+<pre>
+...
+      &lt;!-- X40 --&gt;
+      &lt;match key="system.hardware.product" prefix="2371"&gt;
+        &lt;match key="system.hardware.version" string="ThinkPad X40"&gt;
+          &lt;merge key="power_management.quirk.s3_bios" type="bool"&gt;true&lt;/merge&gt;
+          &lt;merge key="power_management.quirk.s3_mode" type="bool"&gt;true&lt;/merge&gt;
+        &lt;/match&gt;
+      &lt;/match&gt;
+...
+</pre>
+<p>
+Now, hypothetically, we want to add a Lenovo ThinkPad X41.
+We can find the values of <code>system.hardware.*</code> using:
+</p>
+<pre>
+[root@localhost 10freedesktop]# lshal | grep system.hardware
+  system.hardware.product = '1807Y8J'  (string)
+  system.hardware.serial = 'xxxxxxx'  (string)
+  system.hardware.uuid = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'  (string)
+  system.hardware.vendor = 'LENOVO'  (string)
+  system.hardware.version = 'ThinkPad X41'  (string)
+</pre>
+<p>
+We can then add the following fdi segment:
+</p>
+<pre>
+      &lt;!-- X40 --&gt;
+      &lt;match key="system.hardware.product" string="1807Y8J"&gt;
+        &lt;match key="system.hardware.version" string="ThinkPad X41"&gt;
+          &lt;merge key="power_management.quirk.s3_bios" type="bool"&gt;true&lt;/merge&gt;
+          &lt;merge key="power_management.quirk.s3_mode" type="bool"&gt;true&lt;/merge&gt;
+        &lt;/match&gt;
+      &lt;/match&gt;
+</pre>
+<p>
+Then restart HAL:
+</p>
+<pre>
+[root@localhost ~]# /sbin/service haldaemon restart
+Stopping HAL daemon:                                       [<font color="green">  OK  </font>]
+Starting HAL daemon:                                       [<font color="green">  OK  </font>]
+</pre>
+<p>
+To check the quirk has been detected and is present you can do:
+</p>
+<pre>
+lshal | grep quirk
+</pre>
+</p>
+Hopefully then clicking on GNOME Power Manager 'suspend' buttons (or just pressing the keyboard shortcuts) should initiate a successful suspend.
+Please take the few extra steps to <a href="quirk-suspend-report.html">submit this data</a> so that suspend <b>just works</b> for less technical users.
+</p>
+
+<table>
+<tr>
+ <td><img src="img/dialog-information.png" alt="[NOTE]"></td>
+ <td>
+  <p>
+   If you issue a <code>pm-suspend</code> command without any options then the fdi quirks will <b>not</b> be used.
+   You still have to use the <code>--quirk-dpms-on</code> type arguments.
+   There is discussion to add a new argument <code>--auto</code> to use the hal quirks, but this has not yet been included upstream.
+  </p>
+ </td>
+</tr>
+</table>
+
+<p>Back to the <a href="quirk-suspend-index.html">main suspend page</a></p>
+
+</body>
+</html>

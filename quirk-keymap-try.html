@@ -1,0 +1,164 @@
+<html>
+<head>
+<title>Sleep Quirk Debugger</title>
+<link rel="stylesheet" href="style.css" type="text/css" media="screen"/>
+</head>
+<body>
+
+<table align="center" class="title">
+<tr>
+ <td><img src="img/keyboard-shortcuts.png"/></td>
+ <td width="90%" valign="middle"><p class="title">Sleep Quirk Debugger</p></td>
+ <td><img src="img/keyboard-shortcuts.png"/></td>
+</tr>
+</table>
+<p>Back to the <a href="quirk-keymap-index.html">main keymap page</a></p>
+
+<h1>Trying keymaps by editing FDI files</h1>
+<p>
+If the quirks are added to a local fdi data file, then the quirks get used automatically when starting the system.
+</p>
+
+<h3>Editing a local fdi file to test</h3>
+<p>
+Now we can edit an fdi file for a fictional IBM laptop.
+</p>
+<pre>
+[root@localhost ~]# cd /usr/share/hal/fdi/information/10freedesktop
+[root@localhost 10freedesktop]# ls 30-keymap-*
+30-keymap-lenovo.fdi
+[root@localhost 10freedesktop]# gedit 30-keymap-lenovo.fdi
+</pre>
+<p>
+Now the following XML is displayed:
+</p>
+<pre>
+...
+    &lt;match key="system.hardware.vendor" prefix="LENOVO"&gt;
+      &lt;match key="system.hardware.version" contains="3000"&gt;
+        &lt;append key="input.keymap.data" type="strlist"&gt;e016:wifi&lt;/append&gt;	&lt;!-- Fn+F5	Wireless --&gt;
+        &lt;append key="input.keymap.data" type="strlist"&gt;e017:sleep&lt;/append&gt; &lt;!-- Fn+F4	Suspend --&gt;
+        &lt;append key="input.keymap.data" type="strlist"&gt;e018:suspend&lt;/append&gt; &lt;!-- Fn+F12	Hibernate --&gt;
+        &lt;append key="info.capabilities" type="strlist"&gt;input.keymap&lt;/append&gt;
+      &lt;/match&gt;
+    &lt;/match&gt;
+...
+</pre>
+
+<p>
+ This means, match any vendor that starts with LENOVO and any machine with 3000 in the version string.
+ So basically this rule matches Lenovo laptops in the 3000 range.
+</p>
+
+<p>
+ The <code>input.keymap.data</code> is the actual mapping data.
+ The second line actually means 'Take the hex scancode e017 and make it activate key <b>wifi</b>.
+ The bit after the last tag is just a comment, so other people know what key combination to press to get this scancode.
+ In this case, we have to press the Fn key and then F4, which has got a little yellow suspend symbol above it.
+</p>
+
+<h3>Random Numbers?</h3>
+
+<p>
+ But hey, how did I choose the magic number <code>e017</code> and <code>wifi</code>?
+ The attentive amongst you will recognize the <code>e017</code> from the dmesg output - this is the scancode of the FnF4 button and should be unique for each of the unmapped buttons.
+ The other number is the keycode anem in lower case, and these can be found in the file <code>/usr/include/linux/input.h</code> and can also be found <a href="http://lxr.linux.no/source/include/linux/input.h">online</a>.
+</p>
+
+<p>
+ If you look at the file, you'll see lots of <code>KEY_CONSTANTS</code>.
+ We want to choose one that explains what the button is doing.
+ For instance, on multimedia keyboards you might want to use <code>KEY_VOLUMEDOWN (volumedown)</code> or <code>KEY_POWER (power)</code>.
+<p>
+
+<p>
+ This is where it gets slightly tricky for suspend and hibernate.
+ There is quite some confusion about sleep states between input and userspace.
+ The keys used in input.h are badly named, but we have to keep these to maintain compatibility.
+ Yes, I know it's horrific.
+</p>
+
+<table>
+<tr><th>Action</th><th>Kernel Input Key Name</th></tr>
+<tr><td>Suspend</td><td>KEY_SLEEP</td></tr>
+<tr><td>Hibernate</td><td>KEY_SUSPEND</td></tr>
+</table>
+
+<p>
+ Other common keys not present in <code>input.h</code> are defined as follows:
+</p>
+
+<pre>
+LOCK -> KEY_COFFEE
+LIGHT -> KEY_F19
+VIDEOOUT -> KEY_F20
+ROTATESCREEN -> KEY_F21
+VIDEOMODECYCLE -> KEY_F22
+PRESENTATION -> KEY_F23
+</pre>
+
+<p>
+ If you are using one of the 6 substituted keys above, please note in the FDI file what you think the button should be (for instance KEY_ROTATESCREEN) and then when <code>input.h</code> is updated we change all the files automatically.
+</p>
+
+
+<h3>Matching</h3>
+
+<p>
+ So, now we know where to get the scancode and the keyname from.
+ Now we have to make rules up for our machine type so we can match it.
+</p>
+
+<p>
+ Keys you should be using are as follows:
+</p>
+
+<pre>
+system.hardware.product
+system.hardware.vendor
+system.hardware.version
+system.firmware.version
+system.chassis.manufacturer
+</pre>
+
+<p>
+ The values of these can be found with <code>lshal</code> or <code>gnome-device-manager</code>.
+ It is a lot easier if you just modify an existing entry or copy and paste the match tags.
+ For instance, if there was a Lenovo 4000 range of laptops, I would copy the Lenovo 3000 match section and change the number.
+</p>
+
+<p>
+Now, hypothetically, we want to add a Lenovo ThinkPad X41.
+We can find the values of <code>system.hardware.*</code> using:
+</p>
+<pre>
+[root@localhost 10freedesktop]# lshal | grep system.hardware
+  system.hardware.product = '1807Y8J'  (string)
+  system.hardware.serial = 'xxxxxxx'  (string)
+  system.hardware.uuid = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'  (string)
+  system.hardware.vendor = 'LENOVO'  (string)
+  system.hardware.version = 'ThinkPad X41'  (string)
+</pre>
+<p>
+We need to restart HAL to set the new keymap:
+</p>
+<pre>
+[root@localhost ~]# /sbin/service haldaemon restart
+Stopping HAL daemon:                                       [<font color="green">  OK  </font>]
+Starting HAL daemon:                                       [<font color="green">  OK  </font>]
+</pre>
+<p>
+To check the quirk has been detected and is present you can do:
+</p>
+<pre>
+lshal | grep keymap
+</pre>
+</p>
+Hopefully then pressing the keys should have a response in <code>xev</code> and allow you to use <code>gnome-keybindings-properties</code> to assign an action for the key.
+Please take the few extra steps to <a href="quirk-keymap-report.html">submit this data</a> so that keymap <b>just works</b> for less technical users.
+</p>
+
+<p>Back to the <a href="quirk-keymap-index.html">main keymap page</a></p>
+
+</body>
+</html>
