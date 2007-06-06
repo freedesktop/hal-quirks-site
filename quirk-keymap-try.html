@@ -36,9 +36,9 @@ Now the following XML is displayed:
 ...
     &lt;match key="system.hardware.vendor" prefix="LENOVO"&gt;
       &lt;match key="system.hardware.version" contains="3000"&gt;
-        &lt;append key="input.keymap.data" type="strlist"&gt;e016:wifi&lt;/append&gt;	&lt;!-- Fn+F5	Wireless --&gt;
-        &lt;append key="input.keymap.data" type="strlist"&gt;e017:sleep&lt;/append&gt; &lt;!-- Fn+F4	Suspend --&gt;
-        &lt;append key="input.keymap.data" type="strlist"&gt;e018:suspend&lt;/append&gt; &lt;!-- Fn+F12	Hibernate --&gt;
+        &lt;append key="input.keymap.data" type="strlist"&gt;e016:wifi&lt;/append&gt; &lt;!-- Fn+F5 Wireless --&gt;
+        &lt;append key="input.keymap.data" type="strlist"&gt;e017:sleep&lt;/append&gt; &lt;!-- Fn+F4 Suspend --&gt;
+        &lt;append key="input.keymap.data" type="strlist"&gt;e018:suspend&lt;/append&gt; &lt;!-- Fn+F12 Hibernate --&gt;
         &lt;append key="info.capabilities" type="strlist"&gt;input.keymap&lt;/append&gt;
       &lt;/match&gt;
     &lt;/match&gt;
@@ -62,45 +62,47 @@ Now the following XML is displayed:
 <p>
  But hey, how did I choose the magic number <code>e017</code> and <code>wifi</code>?
  The attentive amongst you will recognize the <code>e017</code> from the dmesg output - this is the scancode of the FnF4 button and should be unique for each of the unmapped buttons.
- The other number is the keycode anem in lower case, and these can be found in the file <code>/usr/include/linux/input.h</code> and can also be found <a href="http://lxr.linux.no/source/include/linux/input.h">online</a>.
+ The other number is the keycode name in lower case, and these can be found in the file <code>/usr/include/linux/input.h</code>.
+ There is a list sorted by name available <a href="quirk-keymap-list.txt">here</a>.
 </p>
 
 <p>
- If you look at the file, you'll see lots of <code>KEY_CONSTANTS</code>.
- We want to choose one that explains what the button is doing.
- For instance, on multimedia keyboards you might want to use <code>KEY_VOLUMEDOWN (volumedown)</code> or <code>KEY_POWER (power)</code>.
+ We want to a description that explains what the button is doing.
+ For instance, on multimedia keyboards you might want to use <code>volumedown</code> or <code>power</code>.
 <p>
 
 <p>
  This is where it gets slightly tricky for suspend and hibernate.
  There is quite some confusion about sleep states between input and userspace.
- The keys used in input.h are badly named, but we have to keep these to maintain compatibility.
- Yes, I know it's horrific.
+ The keys used in <code>input.h</code> are badly named, but we have to keep these to maintain compatibility.
 </p>
 
-<table>
-<tr><th>Action</th><th>Kernel Input Key Name</th></tr>
-<tr><td>Suspend</td><td>KEY_SLEEP</td></tr>
-<tr><td>Hibernate</td><td>KEY_SUSPEND</td></tr>
+<table width="40%">
+<tr><th width="50%">Action</th><th>Kernel Input Key Name</th></tr>
+<tr><td>Suspend</td><td><code>sleep</code></td></tr>
+<tr><td>Hibernate</td><td><code>suspend</code></td></tr>
 </table>
 
 <p>
  Other common keys not present in <code>input.h</code> are defined as follows:
 </p>
 
-<pre>
-LOCK -> KEY_COFFEE
-LIGHT -> KEY_F19
-VIDEOOUT -> KEY_F20
-ROTATESCREEN -> KEY_F21
-VIDEOMODECYCLE -> KEY_F22
-PRESENTATION -> KEY_F23
-</pre>
+<table width="40%">
+<tr><th width="50%">Action</th><th>Kernel Input Key Name</th></tr>
+<tr><td>Lock</td><td><code>coffee</code></td></tr>
+<tr><td>Light</td><td><code>f19</code></td></tr>
+<tr><td>Video Out</td><td><code>f20</code></td></tr>
+<tr><td>Rotate Screen</td><td><code>f21</code></td></tr>
+<tr><td>Video Mode Cycle</td><td><code>f22</code></td></tr>
+<tr><td>Presentation</td><td><code>f23</code></td></tr>
+</table>
 
 <p>
- If you are using one of the 6 substituted keys above, please note in the FDI file what you think the button should be (for instance KEY_ROTATESCREEN) and then when <code>input.h</code> is updated we change all the files automatically.
+ If you are using one of the 6 substituted keys above, please note in the FDI file what you think the button should be (for instance <code>rotatescreen</code> and then when <code>input.h</code> is updated we change all the files automatically.
 </p>
-
+<p>
+ If you really cannot find a name for a really odball key (a <code>make</code> button for instance) then please use <code>prog1</code> and add a note in the XML.
+</p>
 
 <h3>Matching</h3>
 
