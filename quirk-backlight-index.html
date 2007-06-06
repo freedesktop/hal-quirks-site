@@ -18,7 +18,67 @@
 
 <p>Back to the <a href="index.html">main page</a></p>
 
-<p class="indextitle">Sorry! Content is being written - please check back soon.</p>
+<p class="indextitle">More content is being written - please check back soon for more answers.</p>
+
+<h1>Fix backlight brightness<h1>
+
+<h2>Backlight is not detected</h2>
+<p>
+ So you've got a laptop and session level programs such as <code>gnome-power-manager</code> don't seem to detect a panel, or changes the brightness incorrectly.
+ First we should check if the panel is detected by HAL.
+ We can check laptop panel object using lshal:
+</p>
+
+<pre>
+[hughsie@work ~]$ lshal | grep laptop_panel
+  info.capabilities = {'laptop_panel'} (string list)
+  info.category = 'laptop_panel'  (string)
+  laptop_panel.access_method = 'general'  (string)
+  laptop_panel.brightness_in_hardware = true  (bool)
+  laptop_panel.num_levels = 8  (0x8)  (int)
+</pre>
+
+<h3>There's nothing detected!</h3>
+<p>
+ Are you using a Lenovo 3k laptop? If so Lenovo have not exported standard controls using ACPI and do the action instead in hardware. Contact me if you want an experimental driver to allow reading the panel brightness, but not setting.
+</p>
+<p>
+ If you get no output on different hardware, then you probably need to do some research on the Internet.
+ Interesting out of tree drivers to investigate are omnibook and sony.
+</p>
+
+<h3>I've got more than one laptop_panel device!</h3>
+<p>
+ The <code>video</code> kernel acpi driver is buggy on quite a few IBM and Lenovo laptops.
+ The quick fix is to <code>rmmod video</code> and then hopefully this only leaves one laptop panel.
+</p>
+<p>
+ You can stop the <code>video</code> module being loaded by doing:
+</p>
+<pre>
+[hughsie@work ~]$ su -l
+Password: 
+[root@work ~]# gedit /etc/modprobe.d/blacklist
+</pre>
+<p>
+ Adding the following line to the end will prevent the module being loaded at boot.
+</p> 
+<pre>
+blacklist video
+</pre>
+
+<h3>When I press brightness up the screen blanks</h3>
+<p>
+ IBM/Lenovo laptop? See the fix above to remove the <code>video</code> module at boot.
+</p>
+
+<h3>When I press brightness up, the screen gets increased twice</h3>
+<p>
+ Some laptops change the brightness in hardware and need to be added to a quirk database so session software such as <code>gnome-power-manager</code> is notified of the event, and then try to set a new brightness, when the hardware has already done so.
+</p>
+<pre>
+...add more content how to add a quirk...
+</pre>
 
 <p>Back to the <a href="index.html">main page</a></p>
 

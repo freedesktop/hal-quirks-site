@@ -112,7 +112,7 @@ function check_iwl3945 (id)
 	if (inputs[0].checked == true) {
 		set_state (id, "", "pass");
 	} else if (inputs[1].checked == true) {
-		set_state (id, "You will need to blacklist <code>iwl3945</code> using <code>SUSPEND_MODULES</code>.", "fail");
+		set_state (id, "You will need to <a href=\"quirk-suspend-advanced.html\">blacklist</a> <code>iwl3945</code> using <code>SUSPEND_MODULES</code>.", "fail");
 	} else {
 		set_state (id, "look for <code>iwl3945</code> in <code>/sbin/lsmod | grep iwl</code>", "unknown");
 	}
@@ -125,7 +125,7 @@ function check_kvm (id)
 	if (inputs[0].checked == true) {
 		set_state (id, "", "pass");
 	} else if (inputs[1].checked == true) {
-		set_state (id, "You will need to blacklist <code>kvm kvm_intel</code> using <code>SUSPEND_MODULES</code>.", "fail");
+		set_state (id, "You will need to <a href=\"quirk-suspend-advanced.html\">blacklist</a> <code>kvm kvm_intel</code> using <code>SUSPEND_MODULES</code>.", "fail");
 	} else {
 		set_state (id, "look for <code>kvm</code> in <code>/sbin/lsmod | grep kvm</code>", "unknown");
 	}

@@ -90,11 +90,9 @@ Now the following XML is displayed:
 <table width="40%">
 <tr><th width="50%">Action</th><th>Kernel Input Key Name</th></tr>
 <tr><td>Lock</td><td><code>coffee</code></td></tr>
-<tr><td>Light</td><td><code>f19</code></td></tr>
-<tr><td>Video Out</td><td><code>f20</code></td></tr>
 <tr><td>Rotate Screen</td><td><code>f21</code></td></tr>
-<tr><td>Video Mode Cycle</td><td><code>f22</code></td></tr>
-<tr><td>Presentation</td><td><code>f23</code></td></tr>
+<tr><td>Touchpad toggle</td><td><code>f22</code></td></tr>
+<tr><td>Undock</td><td><code>f24</code></td></tr>
 </table>
 
 <p>
@@ -128,6 +126,23 @@ system.chassis.manufacturer
  It is a lot easier if you just modify an existing entry or copy and paste the match tags.
  For instance, if there was a Lenovo 4000 range of laptops, I would copy the Lenovo 3000 match section and change the number.
 </p>
+
+<table>
+<tr>
+ <td><img src="img/dialog-information.png" alt="[NOTE]"></td>
+ <td>
+  <p>
+   On some IBM and Lenovo hardware the suspend and hibernate keys generate
+   key up and key down events.
+   They do not generate subsequent events until the hardware has been suspended,
+   hibernated or rebooted.
+  </p>
+  <p>
+   We think this is a firmware feature (bug?) and no known workaround is currentlyknown.
+  </p>
+ </td>
+</tr>
+</table>
 
 <p>
 Now, hypothetically, we want to add a Lenovo ThinkPad X41.
