@@ -40,6 +40,19 @@
 </tr>
 </table>
 
+<p>Are you using GNOME and <b>not</b> using ConsoleKit?</p>
+<table width="100%">
+<tr>
+ <td id="consolekit_data" width="50%">
+  <input type="radio" name="consolekit_data_radio" onChange="check_consolekit ('consolekit');">No<br>
+  <input type="radio" name="consolekit_data_radio" onChange="check_consolekit ('consolekit');">Yes<br>
+  <input type="radio" name="consolekit_data_radio" onChange="check_consolekit ('consolekit');">Not Sure
+ </td>
+ <td><img id="consolekit_img" src="img/unknown.png"/></td>
+ <td><p id="consolekit_info"></p></td>
+</tr>
+</table>
+
 <p>The hal-info version. You can easily get this using:</p>
 <pre>
 rpm -q hal-info | cut -f3 -d"-"

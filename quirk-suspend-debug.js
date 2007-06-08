@@ -38,6 +38,19 @@ function check_kernel (id)
 	}
 }
 
+function check_consolekit (id)
+{
+	var input = document.getElementById (id + "_data");
+	var inputs = input.getElementsByTagName ('input');
+	if (inputs[0].checked == true) {
+		set_state (id, "", "pass");
+	} else if (inputs[1].checked == true) {
+		set_state (id, "You have to use ConsoleKit if you are using GNOME Power Manager.", "fail");
+	} else {
+		set_state (id, "look for <code>console-kit-daemon</code> in <code>ps aux | grep console-kit</code>", "unknown");
+	}
+}
+
 function check_nvidia (id)
 {
 	var input = document.getElementById (id + "_data");
