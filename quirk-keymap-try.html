@@ -66,6 +66,21 @@ Now the following XML is displayed:
  There is a list sorted by name available <a href="quirk-keymap-list.txt">here</a>.
 </p>
 
+<table>
+<tr>
+ <td><img src="img/dialog-information.png" alt="[NOTE]"></td>
+ <td>
+  <p>
+   <b>What do I do if there are two separate keycodes for the same key?</b>
+  </p>
+  <p>
+   It's probably emulating a toggle key.
+   We have no good solution for this now, just include both in the FDI file with a comment and we can fix this later.
+  </p>
+ </td>
+</tr>
+</table>
+
 <p>
  We want to a description that explains what the button is doing.
  For instance, on multimedia keyboards you might want to use <code>volumedown</code> or <code>power</code>.
@@ -109,6 +124,20 @@ Now the following XML is displayed:
  Now we have to make rules up for our machine type so we can match it.
 </p>
 
+<table>
+<tr>
+ <td><img src="img/dialog-information.png" alt="[NOTE]"></td>
+ <td>
+  <p>
+   <b>Do I add keys where the event if done in hardware?</b>
+  </p>
+  <p>
+   Yes, as we may need to tell userspace to do something, for instance show an on screen display or re-read the register state.
+  </p>
+ </td>
+</tr>
+</table>
+
 <p>
  Keys you should be using are as follows:
 </p>
@@ -129,7 +158,7 @@ system.chassis.manufacturer
 
 <table>
 <tr>
- <td><img src="img/dialog-information.png" alt="[NOTE]"></td>
+ <td><img src="img/emblem-important.png" alt="[NOTE]"></td>
  <td>
   <p>
    On some IBM and Lenovo hardware the suspend and hibernate keys generate
@@ -171,7 +200,8 @@ To check the quirk has been detected and is present you can do:
 lshal | grep keymap
 </pre>
 </p>
-Hopefully then pressing the keys should have a response in <code>xev</code> and allow you to use <code>gnome-keybindings-properties</code> to assign an action for the key.
+Hopefully then pressing the keys should have a response in <code>xev</code>. When the new key is pressed you should be notified of the key up and the key down event with the correct keycode.
+This will allow you to use <code>gnome-keybindings-properties</code> to assign an action for the key.
 Please take the few extra steps to <a href="quirk-keymap-report.html">submit this data</a> so that keymap <b>just works</b> for less technical users.
 </p>
 
