@@ -53,6 +53,19 @@ function check_consolekit (id)
 	}
 }
 
+function check_915resolution (id)
+{
+	var input = document.getElementById (id + "_data");
+	var inputs = input.getElementsByTagName ('input');
+	if (inputs[0].checked == true) {
+		set_state (id, "", "pass");
+	} else if (inputs[1].checked == true) {
+		set_state (id, "You should be using the <code>intel</code> xorg driver. 915resolution is obsolete and should not be used.", "fail");
+	} else {
+		set_state (id, "If you don't know, the answer is probably no as you have to add this manually.", "unknown");
+	}
+}
+
 function check_nvidia (id)
 {
 	var input = document.getElementById (id + "_data");

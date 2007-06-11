@@ -130,6 +130,19 @@ rpm -q hal-info | cut -f3 -d"-"
 </tr>
 </table>
 
+<p>Are you using the 915resolution tool to manually set the video mode of your Intel graphics card?</p>
+<table width="100%">
+<tr>
+ <td id="915resolution_data" width="50%">
+  <input type="radio" name="915resolution_data_radio" onChange="check_915resolution ('915resolution');">No<br>
+  <input type="radio" name="915resolution_data_radio" onChange="check_915resolution ('915resolution');">Yes<br>
+  <input type="radio" name="915resolution_data_radio" onChange="check_915resolution ('915resolution');">Not Sure
+ </td>
+ <td><img id="915resolution_img" src="img/unknown.png"/></td>
+ <td><p id="915resolution_info"></p></td>
+</tr>
+</table>
+
 <p>Are you using the suspend2?</p>
 <table width="100%">
 <tr>
