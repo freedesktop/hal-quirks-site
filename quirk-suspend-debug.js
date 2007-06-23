@@ -153,7 +153,7 @@ function check_kvm (id)
 	if (inputs[0].checked == true) {
 		set_state (id, "", "pass");
 	} else if (inputs[1].checked == true) {
-		set_state (id, "You will need to <a href=\"quirk-suspend-advanced.html\">blacklist</a> <code>kvm kvm_intel</code> using <code>SUSPEND_MODULES</code>.", "fail");
+		set_state (id, "You will need to <a href=\"quirk-suspend-advanced.html\">blacklist</a> <code>kvm kvm_intel</code> using <code>SUSPEND_MODULES</code> or use a kernel newer than 2.6.21-1.3228.fc8", "fail");
 	} else {
 		set_state (id, "look for <code>kvm</code> in <code>/sbin/lsmod | grep kvm</code>", "unknown");
 	}
