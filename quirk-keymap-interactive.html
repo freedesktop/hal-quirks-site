@@ -1,0 +1,176 @@
+<html>
+<head>
+<title>Keymap Quirk Debugger</title>
+<link rel="stylesheet" href="style.css" type="text/css" media="screen"/>
+<script>
+
+var questionasked = false;
+
+function createCookie(name,value,days) {
+	if (days) {
+		var date = new Date();
+		date.setTime(date.getTime()+(days*24*60*60*1000));
+		var expires = "; expires="+date.toGMTString();
+	}
+	else var expires = "";
+	document.cookie = name+"="+value+expires+"; path=/";
+}
+
+function readCookie(name) {
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
+		while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	}
+	return null;
+}
+
+function eraseCookie(name) {
+	createCookie(name,"",-1);
+}
+
+function setState(o) {
+	var mySplitResult = o.id.split("-");
+	createCookie(mySplitResult[0], mySplitResult[1], 7);
+	window.location.reload();
+}
+
+function setQuestionText(question, title, more) {
+	var html = document.getElementById ("html");
+	var text = '';
+	if (questionasked == true)
+		return;
+	questionasked = true;
+	text += '<table cellpadding="40px" border="0" width="100%"><tr><td>';
+	text += '<h1>' + title + '</h1>';
+	text += '<p>' + more + '</p>';
+	if (question == "reset")
+	text += '<br><b>Reset to the beginning?</b>';
+	text += '<br></p>';
+	text += '<center><table width="30%">\n';
+	text += '<tr><td align="center"><img src="img/process-stop.png" id="' + question + '-no" onClick="setState(this)"></td>\n';
+	text += '<td align="center"><img src="img/go-next.png" id="' + question + '-yes" onClick="setState(this)"></td></td></tr>\n';
+	text += '<tr><td align="center"><h1>NO</h1></td>\n';
+	text += '<td align="center"><h1>YES</h1></td></td></tr>\n';
+	text += '</table></center>\n';
+	text += '</td></tr></table>';
+	html.innerHTML = text;
+}
+
+</script>
+
+</head>
+<body>
+
+<table align="center" class="title">
+<tr>
+ <td><img src="img/keyboard-shortcuts.png"/></td>
+ <td width="90%" valign="middle"><p class="title">Keymap Quirk Debugger</p></td>
+ <td><img src="img/keyboard-shortcuts.png"/></td>
+</tr>
+</table>
+<p>Back to the <a href="quirk-keymap-index.html">main keymap page</a></p>
+
+<p id="html">
+hey!
+</p>
+
+<script>
+reset = readCookie ("reset");
+setkeycodesdmesg = readCookie ("setkeycodesdmesg");
+distrofedora = readCookie ("distrofedora");
+distromandriva = readCookie ("distromandriva");
+machinethinkpad = readCookie ("machinethinkpad");
+machinesony = readCookie ("machinesony");
+thinkpadacpi = readCookie ("thinkpadacpi");
+fdimoduleprovided = readCookie ("fdimoduleprovided");
+sonylaptop = readCookie ("sonylaptop");
+
+if (reset == "yes") {
+	createCookie("reset", "", -1);
+	createCookie("setkeycodesdmesg", "", -1);
+	createCookie("distrofedora", "", -1);
+	createCookie("distromandriva", "", -1);
+	createCookie("machinethinkpad", "", -1);
+	createCookie("thinkpadacpi", "", -1);
+	createCookie("fdimoduleprovided", "", -1);
+	createCookie("machinesony", "", -1);
+	createCookie("sonylaptop", "", -1);
+	createCookie("xxxxxxxxxxxxxxxxxx", "", -1);
+	createCookie("xxxxxxxxxxxxxxxxxx", "", -1);
+	createCookie("xxxxxxxxxxxxxxxxxx", "", -1);
+	createCookie("xxxxxxxxxxxxxxxxxx", "", -1);
+	createCookie("xxxxxxxxxxxxxxxxxx", "", -1);
+	createCookie("xxxxxxxxxxxxxxxxxx", "", -1);
+	createCookie("xxxxxxxxxxxxxxxxxx", "", -1);
+	window.location.reload();
+}
+
+// check distro
+if (distrofedora == null) {
+	setQuestionText ('distrofedora', 'Distro is Fedora?', 'Are you using Fedora Core 7?');
+}
+if (distrofedora == "no" && distromandriva == null) {
+	setQuestionText ('distromandriva', 'Distro is Mandriva?', 'Are you using Mandriva 2007 Spring?');
+}
+if (distrofedora == "no" && distromandriva == "no") {
+	setQuestionText ('reset', 'Wrong distro!', 'This distro is not supported!?');
+}
+
+// check if we are scancode
+if (setkeycodesdmesg == null) {
+	setQuestionText ('setkeycodesdmesg', 'Setkeycodes in dmesg?', 'Do you get something similar to:<br> <code>atkbd.c: Unknown key pressed (translated set 2, code 0x97 on isa0060/serio0)</code><br><code>atkbd.c: Use "setkeycodes e017" to make it known.</code><br>in <code>dmesg</code> when you press the key that does not work?');
+}
+
+// check modules loaded
+if (setkeycodesdmesg == "no") {
+	if (machinethinkpad == null) {
+		setQuestionText ('machinethinkpad', 'Thinkpad?', 'Are you using an IBM or Lenovo ThinkPad?');
+	}
+	if (machinethinkpad == "yes") {
+		if (thinkpadacpi == null) {
+			setQuestionText ('thinkpadacpi', 'thinkpad-acpi driver present?', 'Does <code>/sbin/lsmod | grep thinkpad</code> report the thinkpad_acpi module?');
+		}
+		if (thinkpadacpi == "no") {
+			setQuestionText ('reset', 'thinkpad-acpi driver missing!', 'You need to install the thinkpad-acpi driver manually, or wait until 2.6.23 is released.');
+		}
+		if (thinkpadacpi == "yes") {
+			setQuestionText ('reset', 'Check the fdi files!', 'You need to <a href="http://gitweb.freedesktop.org/?p=hal-info.git;a=blob;f=fdi/information/10freedesktop/30-keymap-module-thinkpad-acpi.fdi">check the fdi files</a> to make sure your model is being matched. You might need to <a href="quirk-keymap-try.html">add a quirk</a>.');
+		}
+	}
+	if (machinethinkpad == "no") {
+		if (machinesony == null) {
+			setQuestionText ('machinesony', 'Modern Sony?', 'Are you using a Sony laptop less that two years old?');
+		}
+		if (machinesony == "no") {
+			setQuestionText ('reset', 'No supported kernel module!', 'No supported kernel module that supports the <code>setkeycode</code> ioctl. Projects need to switch to using <code>evdev</code> and <code>MSC_SCAN</code>.');
+		}
+		if (machinesony == "yes") {
+			if (sonylaptop == null) {
+				setQuestionText ('sonylaptop', 'thinkpad-acpi driver present?', 'Does <code>/sbin/lsmod | grep sony</code> report the sony_laptop module?');
+			}
+			if (thinkpadacpi == "no") {
+				setQuestionText ('reset', 'sony-laptop driver missing!', 'You need to install the sony-laptop driver manually, or wait until 2.6.23 is released.');
+			}
+			if (thinkpadacpi == "yes") {
+				setQuestionText ('reset', 'Check the fdi files!', 'You need to <a href="http://gitweb.freedesktop.org/?p=hal-info.git;a=blob;f=fdi/information/10freedesktop/30-keymap-module-sony-laptop.fdi">check the fdi files</a> to make sure your model is being matched. You might need to <a href="quirk-keymap-try.html">add a quirk</a>.');
+			}
+		}
+	}
+}
+if (setkeycodesdmesg == "yes") {
+	setQuestionText ('reset', 'Bugger', 'Don\'t press this option yet!');
+}
+
+if (questionasked == false) {
+	setQuestionText ('reset', 'Bugger', 'No more questions - please report to richard@hughsie.com!');
+}
+
+</script>
+
+<p>Back to the <a href="quirk-keymap-index.html">main keymap page</a></p>
+
+</body>
+</html>

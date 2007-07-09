@@ -1,0 +1,48 @@
+<html>
+<head>
+<title>Keymap Quirk Debugger</title>
+<link rel="stylesheet" href="style.css" type="text/css" media="screen"/>
+</head>
+<body>
+
+<table align="center" class="title">
+<tr>
+ <td><img src="img/keyboard-shortcuts.png"/></td>
+ <td width="90%" valign="middle"><p class="title">Sleep Quirk Debugger</p></td>
+ <td><img src="img/keyboard-shortcuts.png"/></td>
+</tr>
+</table>
+<p>Back to the <a href="quirk-keymap-index.html">main keymap page</a></p>
+
+<h1>Finding scancodes?</h1>
+
+<p>
+ Scancodes are the lowest level identifiers of the keypress event.
+ There is a standard table that convert standard scancodes to keycodes that
+ can be processed by the console or X.
+ If the laptop vendor uses scancodes that are not in this conversion table then
+ the key does not get mapped and the following appears in dmesg:
+</p>
+
+<pre>
+atkbd.c: Unknown key pressed (translated set 2, code 0x97 on isa0060/serio0).
+atkbd.c: Use 'setkeycodes e017 keycode' to make it known.
+</pre>
+
+<p>
+ This means the scancode e017 could not be found in the standard table and the
+ input event will not be mapped to any key.
+ This means that the input <b>cannot</b> be remapped with a keymap as userspace
+ is completely unaware of the input.
+</p>
+
+<p>
+ You only need to remap keys using HAL that do not product valid keycodes
+ (i.e. you get the warning in dmesg) as the others can be done with a keymap.
+ Please <a href="quirk-keymap-try.html"> report and send patches to fix this.
+</p>
+
+<p>Back to the <a href="quirk-keymap-index.html">main keymap page</a></p>
+
+</body>
+</html>

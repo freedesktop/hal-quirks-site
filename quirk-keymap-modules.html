@@ -1,0 +1,158 @@
+<html>
+<head>
+<title>Keymap Quirk Debugger</title>
+<link rel="stylesheet" href="style.css" type="text/css" media="screen"/>
+</head>
+<body>
+
+<table align="center" class="title">
+<tr>
+ <td><img src="img/keyboard-shortcuts.png"/></td>
+ <td width="90%" valign="middle"><p class="title">Keymap Quirk Debugger</p></td>
+ <td><img src="img/keyboard-shortcuts.png"/></td>
+</tr>
+</table>
+<p>Back to the <a href="quirk-keymap-index.html">main keymap page</a></p>
+
+<h1>Kernel Modules</h1>
+<p>
+The APCI layer (and other hardware) emits events that are usually handled by
+system daeons such as acpid and lineakd.
+This interface is broken and depricated, and we have a good framework in the
+kernel for key presses, <b>INPUT</b>.
+Using INPUT also allows us to use the existing frameworks and do all the
+policy and configuration using standard tools and standard frameworks.
+</p>
+<p>
+Using INPUT allows us to remap keys using the <code>setkeycode</code> ioctl.
+This is a good thing as it lets us remap keys from <code>KEY_FN_F4</code> to <code>KEY_BRIGHTNESSUP</code>.
+This allows stuff like gnome-power-manager, HAL and X11 do the right thing when
+the button is pressed, rather than having to remap it by hand or editing config files.
+</p>
+<p>
+We can match the laptop make and model into hal-info and automatically make the
+keys do the right thing.
+To do this we need to map from hardware events (virtual scancodes) into keycodes.
+The virtual scancodes are listed in the tables below.
+</p>
+<p>
+All the entries should look something like:
+</p>
+
+<pre>
+    &lt;match key="input.product" string="Sony Vaio Keys"&gt;
+      &lt;match key="/org/freedesktop/Hal/devices/computer:system.hardware.vendor" prefix="Sony"&gt;
+        &lt;match key="/org/freedesktop/Hal/devices/computer:system.hardware.product" string="VGN-S1XP(GB)"&gt;
+          &lt;append key="input.keymap.data" type="strlist"&gt;0x0d:mute&lt;/append&gt; &lt;!-- Fn+F2 mute --&gt;
+          &lt;append key="input.keymap.data" type="strlist"&gt;0x0e:volumedown&lt;/append&gt; &lt;!-- Fn+F3 mixer down --&gt;
+          &lt;append key="input.keymap.data" type="strlist"&gt;0x0f:volumeup&lt;/append&gt; &lt;!-- Fn+F4 mixer up --&gt;
+          &lt;append key="input.keymap.data" type="strlist"&gt;0x10:brightnessdown&lt;/append&gt; &lt;!-- Fn+F5 brightness up --&gt;
+          &lt;append key="input.keymap.data" type="strlist"&gt;0x11:brightnessup&lt;/append&gt; &lt;!-- Fn+F6 brightness down --&gt;
+          &lt;append key="input.keymap.data" type="strlist"&gt;0x12:switchvideomode&lt;/append&gt; &lt;!-- Fn+F7 switch crt/lcd --&gt;
+          &lt;append key="input.keymap.data" type="strlist"&gt;0x17:suspend&lt;/append&gt; &lt;!-- Fn+F12 hibernate --&gt;
+          &lt;append key="info.capabilities" type="strlist"&gt;input.keymap&lt;/append&gt;
+        &lt;/match&gt;
+      &lt;/match&gt;
+    &lt;/match&gt;
+</pre>
+
+
+<h2>ThinkPads</h2>
+<p>
+If you are using a thinkpad and you want to do <i>driver</i> matching you'll
+need to install a very new kernel (2.6.23) with the updated <code>thinkpad-acpi</code> driver.
+Driver matching (using <code>MSC_SCAN</code>) is needed when the ACPI event is propogated
+through evdev but is unknown.
+</p>
+<p>
+You can see the existing thinkpad-acpi keymaps <a href="http://gitweb.freedesktop.org/?p=hal-info.git;a=blob;f=fdi/information/10freedesktop/30-keymap-module-thinkpad-acpi.fdi">here</a>.
+</p>
+
+<table>
+<tr><th>ThinkPad Event</th><th>Description</th></tr>
+<tr><td>0x00</td><td>Fn F1</td></tr>
+<tr><td>0x01</td><td>Fn F2</td></tr>
+<tr><td>0x02</td><td>Fn F3</td></tr>
+<tr><td>0x03</td><td>Fn F4</td></tr>
+<tr><td>0x04</td><td>Fn F5</td></tr>
+<tr><td>0x05</td><td>Fn F6</td></tr>
+<tr><td>0x06</td><td>Fn F7</td></tr>
+<tr><td>0x07</td><td>Fn F8</td></tr>
+<tr><td>0x08</td><td>Fn F9</td></tr>
+<tr><td>0x09</td><td>Fn F10</td></tr>
+<tr><td>0x0a</td><td>Fn F11</td></tr>
+<tr><td>0x0b</td><td>Fn F12</td></tr>
+<tr><td>0x0c</td><td>Fn Backspace</td></tr>
+<tr><td>0x0d</td><td>Fn Insert</td></tr>
+<tr><td>0x0e</td><td>Fn Delete</td></tr>
+<tr><td>0x0f</td><td>Fn Home</td></tr>
+<tr><td>0x10</td><td>Fn End</td></tr>
+<tr><td>0x11</td><td>Fn Page Up</td></tr>
+<tr><td>0x12</td><td>Fn Page Down</td></tr>
+<tr><td>0x13</td><td>Fn Space</td></tr>
+<tr><td>0x14</td><td>Volume Up</td></tr>
+<tr><td>0x15</td><td>Volume Down</td></tr>
+<tr><td>0x16</td><td>Mute</td></tr>
+<tr><td>0x17</td><td>Thinkpad Button</td></tr>
+</table>
+
+<h2>New Sony Laptops</h2>
+<p>
+If you are using a new sony laptop and you want to do <i>driver</i> matching you'll
+need to install a very new kernel (2.6.23) with the updated <code>sony-laptop</code> driver.
+</p>
+<p>
+You can see the existing sony-laptop keymaps <a href="http://gitweb.freedesktop.org/?p=hal-info.git;a=blob;f=fdi/information/10freedesktop/30-keymap-module-sony-laptop.fdi">here</a>.
+</p>
+
+<table>
+<tr><th>Sony Event</th><th>Description</th></tr>
+<tr><td>0x07</td><td>Capture Pressed</td></tr>
+<tr><td>0x08</td><td>Capture Released</td></tr>
+<tr><td>0x09</td><td>Capture Partialpressed</td></tr>
+<tr><td>0x0a</td><td>Capture Partialreleased</td></tr>
+<tr><td>0x0b</td><td>Fn Esc</td></tr>
+<tr><td>0x0c</td><td>Fn F1</td></tr>
+<tr><td>0x0d</td><td>Fn F2</td></tr>
+<tr><td>0x0e</td><td>Fn F3</td></tr>
+<tr><td>0x0f</td><td>Fn F4</td></tr>
+<tr><td>0x10</td><td>Fn F5</td></tr>
+<tr><td>0x11</td><td>Fn F6</td></tr>
+<tr><td>0x12</td><td>Fn F7</td></tr>
+<tr><td>0x13</td><td>Fn F8</td></tr>
+<tr><td>0x14</td><td>Fn F9</td></tr>
+<tr><td>0x15</td><td>Fn F10</td></tr>
+<tr><td>0x16</td><td>Fn F11</td></tr>
+<tr><td>0x17</td><td>Fn F12</td></tr>
+<tr><td>0x18</td><td>Fn 1</td></tr>
+<tr><td>0x19</td><td>Fn 2</td></tr>
+<tr><td>0x1a</td><td>Fn D</td></tr>
+<tr><td>0x1b</td><td>Fn E</td></tr>
+<tr><td>0x1c</td><td>Fn F</td></tr>
+<tr><td>0x1d</td><td>Fn S</td></tr>
+<tr><td>0x1e</td><td>Fn B</td></tr>
+<tr><td>0x1f</td><td>Bluetooth Pressed</td></tr>
+<tr><td>0x20</td><td>Pkey P1</td></tr>
+<tr><td>0x21</td><td>Pkey P2</td></tr>
+<tr><td>0x22</td><td>Pkey P3</td></tr>
+<tr><td>0x23</td><td>Back</td></tr>
+<tr><td>0x26</td><td>Bluetooth On</td></tr>
+<tr><td>0x27</td><td>Bluetooth Off</td></tr>
+<tr><td>0x28</td><td>Help Pressed</td></tr>
+<tr><td>0x29</td><td>Fn Only</td></tr>
+<tr><td>0x32</td><td>Zoom Pressed</td></tr>
+<tr><td>0x33</td><td>Thumbphrase Pressed</td></tr>
+<tr><td>0x34</td><td>Meye Face</td></tr>
+<tr><td>0x35</td><td>Meye Opposite</td></tr>
+<tr><td>0x36</td><td>Memorystick Insert</td></tr>
+<tr><td>0x37</td><td>Memorystick Eject</td></tr>
+<tr><td>0x38</td><td>Any Button Released</td></tr>
+<tr><td>0x3b</td><td>Fn Released</td></tr>
+<tr><td>0x3c</td><td>Wireless On</td></tr>
+<tr><td>0x3d</td><td>Wireless Off</td></tr>
+</table>
+
+<p>Back to the <a href="quirk-keymap-index.html">main keymap page</a></p>
+
+</body>
+</html>

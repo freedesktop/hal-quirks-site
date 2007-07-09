@@ -30,22 +30,40 @@ atkbd.c: Use 'setkeycodes e017 <keycode>' to make it known.
 <p>
 in the <code>dmesg</code> output. He doesn't know what that means.
 </p>
+<p>
+Other buttons don't display anything, but sometimes work using extra software
+like <code>tpd</code> and <code>lineakd</code>.
+</p>
 
 <h2>Problem</h2>
 <p>
  Some vendors use buttons that are not recognized by Linux, and a scancode to keycode mapping is not done.
  This means the button does not work in X, and instead prints the error to the system log.
 </p>
+<p>
+ Other (or even the same!) vendors push keys through the ACPI layer, which means they are not processed
+ by X and thus do nothing unless you have a daemon polling or catching the ACPI events which is not
+ setup by default. It also means having the policy code in two or more places.
+</p>
 
 <h2>Solution</h2>
 <p>
- For some Ubuntu users, the hotkey-setup package can be used to create the mapping, although this package is not integrated with any other distributions, and it is not easy to add new entries.
- A cross-distro and better solution is to use HAL, so that DMI data (data specific to your machine type) is matched against a set of rules, and the keys are automatically mapped at boot time.
+ For some Ubuntu users, the hotkey-setup package can be used to create the mapping,
+ although this package is not integrated with any other distributions,
+ and it is not easy to add new entries.
+</p>
+<p>
+ A cross-distro and better solution is to use HAL, so that DMI data
+ (data specific to your machine type) is matched against a set of rules,
+ and the keys are automatically mapped at boot time.
 </p>
 
 <p>
- New rules are being created every day, and updating the hal-info package might just get things working for you without doing anything else.
- This FAQ will explain how to use HAL to create the rule using DMI data, and then send the rule to the HAL list so that other Linux users with the same laptop model will have their buttons "just work".
+ New rules are being created every day, and updating the hal-info package might
+ just get things working for you without doing anything else.
+ This FAQ will explain how to use HAL to create the rule using DMI data,
+ and then send the rule to the HAL list so that other Linux users with the
+ same laptop model will have their buttons "just work".
 </p>
 
 <p>Back to the <a href="quirk-keymap-index.html">main keymap page</a></p>
