@@ -16,7 +16,8 @@
 
 <h1>Trying keymaps by editing FDI files</h1>
 <p>
-If the quirks are added to a local fdi data file, then the quirks get used automatically when starting the system.
+If the quirks are added to a local fdi data file, then the quirks get used
+automatically when starting the system.
 </p>
 
 <h3>Editing a local fdi file to test</h3>
@@ -46,23 +47,30 @@ Now the following XML is displayed:
 </pre>
 
 <p>
- This means, match any vendor that starts with LENOVO and any machine with 3000 in the version string.
+ This means, match any vendor that starts with LENOVO and any machine with 3000
+ in the version string.
  So basically this rule matches Lenovo laptops in the 3000 range.
 </p>
 
 <p>
  The <code>input.keymap.data</code> is the actual mapping data.
- The second line actually means 'Take the hex scancode e017 and make it activate key <b>wifi</b>.
- The bit after the last tag is just a comment, so other people know what key combination to press to get this scancode.
- In this case, we have to press the Fn key and then F4, which has got a little yellow suspend symbol above it.
+ The second line actually means 'Take the hex scancode e017 and make it
+ activate key <b>wifi</b>.
+ The bit after the last tag is just a comment, so other people know what key
+ combination to press to get this scancode.
+ In this case, we have to press the Fn key and then F4, which has got a little
+ yellow suspend symbol above it.
 </p>
 
 <h3>Random Numbers?</h3>
 
 <p>
  But hey, how did I choose the magic number <code>e017</code> and <code>wifi</code>?
- The attentive amongst you will recognize the <code>e017</code> from the dmesg output - this is the scancode of the FnF4 button and should be unique for each of the unmapped buttons.
- The other number is the keycode name in lower case, and these can be found in the file <code>/usr/include/linux/input.h</code>.
+ The attentive amongst you will recognize the <code>e017</code> from the dmesg
+ output - this is the scancode of the FnF4 button and should be unique for each
+ of the unmapped buttons.
+ The other number is the keycode name in lower case, and these can be found in
+ the file <code>/usr/include/linux/input.h</code>.
  There is a list sorted by name available <a href="quirk-keymap-list.txt">here</a>.
 </p>
 
@@ -75,7 +83,8 @@ Now the following XML is displayed:
   </p>
   <p>
    It's probably emulating a toggle key.
-   We have no good solution for this now, just include both in the FDI file with a comment and we can fix this later.
+   We have no good solution for this now, just include both in the FDI file with
+   a comment and we can fix this later.
   </p>
  </td>
 </tr>
@@ -83,13 +92,15 @@ Now the following XML is displayed:
 
 <p>
  We want to a description that explains what the button is doing.
- For instance, on multimedia keyboards you might want to use <code>volumedown</code> or <code>power</code>.
+ For instance, on multimedia keyboards you might want to use
+ <code>volumedown</code> or <code>power</code>.
 <p>
 
 <p>
  This is where it gets slightly tricky for suspend and hibernate.
  There is quite some confusion about sleep states between input and userspace.
- The keys used in <code>input.h</code> are badly named, but we have to keep these to maintain compatibility.
+ The keys used in <code>input.h</code> are badly named, but we have to keep
+ these to maintain compatibility.
 </p>
 
 <table width="40%">
@@ -111,7 +122,9 @@ Now the following XML is displayed:
 </table>
 
 <p>
- If you are using one of the substituted keys above, please note in the FDI file what you think the button should be (for instance <code>rotatescreen</code> and then when <code>input.h</code> is updated we change all the files automatically.
+ If you are using one of the substituted keys above, please note in the FDI
+ file what you think the button should be (for instance <code>rotatescreen</code>
+ and then when <code>input.h</code> is updated we change all the files automatically.
 </p>
 
 <p>
@@ -123,11 +136,14 @@ Now the following XML is displayed:
 <tr><td>Lock</td><td><code>screenlock</code></td></tr>
 <tr><td>Take a picture</td><td><code>camera</code></td></tr>
 <tr><td>Internet</td><td><code>www</code></td></tr>
-<tr><td>Wifi / Bluetooth Toggle</td><td><code>radio</code></td></tr>
+<tr><td>Wifi toggle</td><td><code>wlan</code></td></tr>
+<tr><td>Wifi <b>and</b> bluetooth toggle</td><td><code>radio</code></td></tr>
 </table>
 
 <p>
- If you really cannot find a name for a really oddball key (a <code>make</code> button for instance) then please use <code>prog1</code> and add a note in the XML.
+ If you really cannot find a name for a really oddball key
+ (a <code>make</code> button for instance) then please use <code>prog1</code>
+ and add a note in the XML.
 </p>
 
 <h3>Matching</h3>
@@ -145,7 +161,8 @@ Now the following XML is displayed:
    <b>Do I add keys where the event if done in hardware?</b>
   </p>
   <p>
-   Yes, as we may need to tell userspace to do something, for instance show an on screen display or re-read the register state.
+   Yes, as we may need to tell userspace to do something, for instance show an
+   on screen display or re-read the register state.
   </p>
  </td>
 </tr>
@@ -165,8 +182,10 @@ system.chassis.manufacturer
 
 <p>
  The values of these can be found with <code>lshal</code> or <code>gnome-device-manager</code>.
- It is a lot easier if you just modify an existing entry or copy and paste the match tags.
- For instance, if there was a Lenovo 4000 range of laptops, I would copy the Lenovo 3000 match section and change the number.
+ It is a lot easier if you just modify an existing entry or copy and paste
+ the match tags.
+ For instance, if there was a Lenovo 4000 range of laptops, I would copy the
+ Lenovo 3000 match section and change the number.
 </p>
 
 <table>
@@ -180,7 +199,8 @@ system.chassis.manufacturer
    hibernated or rebooted.
   </p>
   <p>
-   We think this is a firmware feature (bug?) and no known workaround is currentlyknown.
+   We think this is a firmware feature (bug?) and no known workaround is
+   currently known.
   </p>
  </td>
 </tr>
@@ -213,9 +233,13 @@ To check the quirk has been detected and is present you can do:
 lshal | grep keymap
 </pre>
 </p>
-Hopefully then pressing the keys should have a response in <code>xev</code>. When the new key is pressed you should be notified of the key up and the key down event with the correct keycode.
-This will allow you to use <code>gnome-keybindings-properties</code> to assign an action for the key.
-Please take the few extra steps to <a href="quirk-keymap-report.html">submit this data</a> so that keymap <b>just works</b> for less technical users.
+Hopefully then pressing the keys should have a response in <code>xev</code>.
+When the new key is pressed you should be notified of the key up and the key
+down event with the correct keycode.
+This will allow you to use <code>gnome-keybindings-properties</code> to assign
+an action for the key.
+Please take the few extra steps to <a href="quirk-keymap-report.html">submit this data</a>
+so that keymap <b>just works</b> for less technical users.
 </p>
 
 <p>Back to the <a href="quirk-keymap-index.html">main keymap page</a></p>
