@@ -104,17 +104,30 @@ Now the following XML is displayed:
 
 <table width="40%">
 <tr><th width="50%">Action</th><th>Kernel Input Key Name</th></tr>
-<tr><td>Lock</td><td><code>coffee</code></td></tr>
 <tr><td>Rotate Screen</td><td><code>f21</code></td></tr>
 <tr><td>Touchpad toggle</td><td><code>f22</code></td></tr>
 <tr><td>Undock</td><td><code>f24</code></td></tr>
+<tr><td>Auto Brightness</td><td><code>f23</code></td></tr>
 </table>
 
 <p>
- If you are using one of the 6 substituted keys above, please note in the FDI file what you think the button should be (for instance <code>rotatescreen</code> and then when <code>input.h</code> is updated we change all the files automatically.
+ If you are using one of the substituted keys above, please note in the FDI file what you think the button should be (for instance <code>rotatescreen</code> and then when <code>input.h</code> is updated we change all the files automatically.
 </p>
+
 <p>
- If you really cannot find a name for a really odball key (a <code>make</code> button for instance) then please use <code>prog1</code> and add a note in the XML.
+ Keys that are difficult to map (but agreed upon) are defined as follows:
+</p>
+
+<table width="40%">
+<tr><th width="50%">Action</th><th>Kernel Input Key Name</th></tr>
+<tr><td>Lock</td><td><code>screenlock</code></td></tr>
+<tr><td>Take a picture</td><td><code>camera</code></td></tr>
+<tr><td>Internet</td><td><code>www</code></td></tr>
+<tr><td>Wifi / Bluetooth Toggle</td><td><code>radio</code></td></tr>
+</table>
+
+<p>
+ If you really cannot find a name for a really oddball key (a <code>make</code> button for instance) then please use <code>prog1</code> and add a note in the XML.
 </p>
 
 <h3>Matching</h3>

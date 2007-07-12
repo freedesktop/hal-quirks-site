@@ -72,6 +72,7 @@ del_line
 digits
 direction
 directory
+displaytoggle
 documents
 dot
 down
@@ -280,6 +281,7 @@ sat
 sat2
 save
 screen
+screenlock
 scrolldown
 scrolllock
 scrollup
