@@ -28,7 +28,7 @@ function check_kernel (id)
 	if (input.value.indexOf ("xen") != -1) {
 		set_state (id, "Cannot suspend xen kernel", "fail");
 	} else if (input.value.indexOf ("3194") != -1) {
-		set_state (id, "<b>Do not</b> use the default Fedora GOLD kernel. It's broken. Use a kernel from F8 or wait until one is released in <code>f7-updates</code>.", "fail");
+		set_state (id, "<b>Do not</b> use the default Fedora GOLD kernel. It's broken. Use a kernel from updates-testing or wait until one is released in <code>f7-updates</code>.", "fail");
 	} else if (input.value.indexOf ("2.6") == -1) {
 		set_state (id, "Is this a valid kernel?", "fail");
 	} else if (input.value.indexOf ("2.6.21") == -1) {
