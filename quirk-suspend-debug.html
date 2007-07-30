@@ -16,42 +16,31 @@
 <p>Back to the <a href="quirk-suspend-index.html">main suspend page</a></p>
 
 <h1>Checking common system problems</h1>
+<p>
+ Download the <a href="quirk-checker.sh">script</a> here to check for common problems.
+</p>
+<p>
+ The output of the script will be something like:
+</p>
+<pre>
+[hughsie@work ~]$ ./quirk-checker.sh 
+Checking your system...
 
-<p>What distro are you using?</p>
-<table width="100%">
-<tr>
- <td id="distro_data" width="50%">
-  <input type="radio" name="distro_data_radio" onChange="check_distro ('distro');">Fedora 7<br>
-  <input type="radio" name="distro_data_radio" onChange="check_distro ('distro');">Mandriva Linux 2007 Spring<br>
-  <input type="radio" name="distro_data_radio" onChange="check_distro ('distro');">RHEL 5<br>
-  <input type="radio" name="distro_data_radio" onChange="check_distro ('distro');">Other
- </td>
- <td><img id="distro_img" src="img/unknown.png"/></td>
- <td><p id="distro_info"></p></td>
-</tr>
-</table>
+WARNING: You have no quirks!
+WARNING: iwl3945 is broken for suspend - snapshots from git work much better.
+WARNING: KVM will not suspend in kernels less than 2.6.23.
 
-<p>Kernel Version (output of <code>uname -r</code>)</p>
-<table width="100%">
-<tr>
- <td width="50%"><input id="kernel_data" type="text" onChange="check_kernel ('kernel');"></input></td>
- <td><img id="kernel_img" src="img/unknown.png"/></td>
- <td><p id="kernel_info"></p></td>
-</tr>
-</table>
+Suggestions:
 
-<p>Are you using GNOME and <b>not</b> using ConsoleKit?</p>
-<table width="100%">
-<tr>
- <td id="consolekit_data" width="50%">
-  <input type="radio" name="consolekit_data_radio" onChange="check_consolekit ('consolekit');">No<br>
-  <input type="radio" name="consolekit_data_radio" onChange="check_consolekit ('consolekit');">Yes<br>
-  <input type="radio" name="consolekit_data_radio" onChange="check_consolekit ('consolekit');">Not Sure
- </td>
- <td><img id="consolekit_img" src="img/unknown.png"/></td>
- <td><p id="consolekit_info"></p></td>
-</tr>
-</table>
+Add 'SUSPEND_MODULES="kvm_intel kvm iwl3945"' to /etc/pm/config.d/unload_modules!
+
+You might want to try the following pm-suspend entries:
+pm-suspend --quirk-s3-bios --quirk-s3-mode
+pm-suspend --quirk-vbemode-restore
+pm-suspend --quirk-vbe-post
+</pre>
+
+<h1>Other things to check</h1>
 
 <p>The hal-info version. You can easily get this using:</p>
 <pre>
@@ -65,123 +54,6 @@ rpm -q hal-info | cut -f3 -d"-"
 </tr>
 </table>
 
-<p>Are you using the proprietary NVIDIA driver?</p>
-<table width="100%">
-<tr>
- <td id="nvidia_data" width="50%">
-  <input type="radio" name="nvidia_data_radio" onChange="check_nvidia ('nvidia');">No<br>
-  <input type="radio" name="nvidia_data_radio" onChange="check_nvidia ('nvidia');">Yes<br>
-  <input type="radio" name="nvidia_data_radio" onChange="check_nvidia ('nvidia');">Not Sure
- </td>
- <td><img id="nvidia_img" src="img/unknown.png"/></td>
- <td><p id="nvidia_info"></p></td>
-</tr>
-</table>
-
-<p>Are you using the proprietary ATI driver?</p>
-<table width="100%">
-<tr>
- <td id="ati_data" width="50%">
-  <input type="radio" name="ati_data_radio" onChange="check_ati ('ati');">No<br>
-  <input type="radio" name="ati_data_radio" onChange="check_ati ('ati');">Yes<br>
-  <input type="radio" name="ati_data_radio" onChange="check_ati ('ati');">Not Sure
- </td>
- <td><img id="ati_img" src="img/unknown.png"/></td>
- <td><p id="ati_info"></p></td>
-</tr>
-</table>
-
-<p>Are you using a broadcom <code>b44</code> network device?</p>
-<table width="100%">
-<tr>
- <td id="broadcom_data" width="50%">
-  <input type="radio" name="broadcom_data_radio" onChange="check_broadcom ('broadcom');">No<br>
-  <input type="radio" name="broadcom_data_radio" onChange="check_broadcom ('broadcom');">Yes<br>
-  <input type="radio" name="broadcom_data_radio" onChange="check_broadcom ('broadcom');">Not Sure
- </td>
- <td><img id="broadcom_img" src="img/unknown.png"/></td>
- <td><p id="broadcom_info"></p></td>
-</tr>
-</table>
-
-<p>Are you using ndiswrapper for your wireless network device?</p>
-<table width="100%">
-<tr>
- <td id="ndiswrapper_data" width="50%">
-  <input type="radio" name="ndiswrapper_data_radio" onChange="check_ndiswrapper ('ndiswrapper');">No<br>
-  <input type="radio" name="ndiswrapper_data_radio" onChange="check_ndiswrapper ('ndiswrapper');">Yes<br>
-  <input type="radio" name="ndiswrapper_data_radio" onChange="check_ndiswrapper ('ndiswrapper');">Not Sure
- </td>
- <td><img id="ndiswrapper_img" src="img/unknown.png"/></td>
- <td><p id="ndiswrapper_info"></p></td>
-</tr>
-</table>
-
-<p>Are you using the old <code>i810</code> intel driver?</p>
-<table width="100%">
-<tr>
- <td id="intel_data" width="50%">
-  <input type="radio" name="intel_data_radio" onChange="check_intel ('intel');">No<br>
-  <input type="radio" name="intel_data_radio" onChange="check_intel ('intel');">Yes<br>
-  <input type="radio" name="intel_data_radio" onChange="check_intel ('intel');">Not Sure
- </td>
- <td><img id="intel_img" src="img/unknown.png"/></td>
- <td><p id="intel_info"></p></td>
-</tr>
-</table>
-
-<p>Are you using the 915resolution tool to manually set the video mode of your Intel graphics card?</p>
-<table width="100%">
-<tr>
- <td id="915resolution_data" width="50%">
-  <input type="radio" name="915resolution_data_radio" onChange="check_915resolution ('915resolution');">No<br>
-  <input type="radio" name="915resolution_data_radio" onChange="check_915resolution ('915resolution');">Yes<br>
-  <input type="radio" name="915resolution_data_radio" onChange="check_915resolution ('915resolution');">Not Sure
- </td>
- <td><img id="915resolution_img" src="img/unknown.png"/></td>
- <td><p id="915resolution_info"></p></td>
-</tr>
-</table>
-
-<p>Are you using the suspend2?</p>
-<table width="100%">
-<tr>
- <td id="suspend2_data" width="50%">
-  <input type="radio" name="suspend2_data_radio" onChange="check_suspend2 ('suspend2');">No<br>
-  <input type="radio" name="suspend2_data_radio" onChange="check_suspend2 ('suspend2');">Yes<br>
- </td>
- <td><img id="suspend2_img" src="img/unknown.png"/></td>
- <td><p id="suspend2_info"></p></td>
-</tr>
-</table>
-
-<p>Is <code>mem</code> present in <code>/sys/power/state</code>?</p>
-<table width="100%">
-<tr>
- <td id="kernelstate_data" width="50%">
-  <input type="radio" name="kernelstate_data_radio" onChange="check_kernelstate ('kernelstate');">No<br>
-  <input type="radio" name="kernelstate_data_radio" onChange="check_kernelstate ('kernelstate');">Yes
- </td>
- <td><img id="kernelstate_img" src="img/unknown.png"/></td>
- <td><p id="kernelstate_info"></p></td>
-</tr>
-</table>
-
-<p>Does HAL recognise the suspend facility? You can check this by checking the output of:</p>
-<pre>
- hal-get-property --udi /org/freedesktop/Hal/devices/computer --key power_management.can_suspend
-</pre>
-<table width="100%">
-<tr>
- <td id="halproperty_data" width="50%">
-  <input type="radio" name="halproperty_data_radio" onChange="check_halproperty ('halproperty');">No<br>
-  <input type="radio" name="halproperty_data_radio" onChange="check_halproperty ('halproperty');">Yes
- </td>
- <td><img id="halproperty_img" src="img/unknown.png"/></td>
- <td><p id="halproperty_info"></p></td>
-</tr>
-</table>
-
 <p>If you log in as root and issue 'pm-suspend' does the laptop power down?</p>
 <table width="100%">
 <tr>
@@ -191,45 +63,6 @@ rpm -q hal-info | cut -f3 -d"-"
  </td>
  <td><img id="pmutils_img" src="img/unknown.png"/></td>
  <td><p id="pmutils_info"></p></td>
-</tr>
-</table>
-
-<p>Is the <code>ipw3945d</code> process running?</p>
-<table width="100%">
-<tr>
- <td id="ipw3945d_data" width="50%">
-  <input type="radio" name="ipw3945d_data_radio" onChange="check_ipw3945d ('ipw3945d');">No<br>
-  <input type="radio" name="ipw3945d_data_radio" onChange="check_ipw3945d ('ipw3945d');">Yes<br>
-  <input type="radio" name="ipw3945d_data_radio" onChange="check_ipw3945d ('ipw3945d');">Not Sure
- </td>
- <td><img id="ipw3945d_img" src="img/unknown.png"/></td>
- <td><p id="ipw3945d_info"></p></td>
-</tr>
-</table>
-
-<p>Is the <code>iwl3945</code> module loaded?</p>
-<table width="100%">
-<tr>
- <td id="iwl3945_data" width="50%">
-  <input type="radio" name="iwl3945_data_radio" onChange="check_iwl3945 ('iwl3945');">No<br>
-  <input type="radio" name="iwl3945_data_radio" onChange="check_iwl3945 ('iwl3945');">Yes<br>
-  <input type="radio" name="iwl3945_data_radio" onChange="check_iwl3945 ('iwl3945');">Not Sure
- </td>
- <td><img id="iwl3945_img" src="img/unknown.png"/></td>
- <td><p id="iwl3945_info"></p></td>
-</tr>
-</table>
-
-<p>Is the <code>kvm</code> module loaded?</p>
-<table width="100%">
-<tr>
- <td id="kvm_data" width="50%">
-  <input type="radio" name="kvm_data_radio" onChange="check_kvm ('kvm');">No<br>
-  <input type="radio" name="kvm_data_radio" onChange="check_kvm ('kvm');">Yes<br>
-  <input type="radio" name="kvm_data_radio" onChange="check_kvm ('kvm');">Not Sure
- </td>
- <td><img id="kvm_img" src="img/unknown.png"/></td>
- <td><p id="kvm_info"></p></td>
 </tr>
 </table>
 
