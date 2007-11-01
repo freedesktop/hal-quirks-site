@@ -147,20 +147,20 @@ if [ -e /usr/bin/suspend ]; then
 fi
 
 #check for old intel networking
-if [ -n "`ps aux | grep ipw | grep -v grep`" ]; then
+if [ -n "`ps aux | grep ipw3945 | grep -v grep`" ]; then
 	abort "Use the mac80211 based iwl3945 driver instead. ipw3945d is closed source sometimes hangs on resume."
 fi
 
 #check for iwl3945
 if [ -n "`/sbin/lsmod | grep iwl3945`" ]; then
 	add_module "iwl3945"
-	warn "iwl3945 is pretty broken for suspend - snapshots from git work much better."
+	warn "iwl3945 is usually okay for suspend - but it might be worth trying unloading it."
 fi
 
 #check for kvm
 if [ -n "`/sbin/lsmod | grep kvm`" ]; then
 	add_module "kvm"
-	warn "KVM will not suspend in kernels less than 2.6.23."
+	warn "KVM will not suspend in kernels less than 2.6.23, but should work okay in later kernels."
 fi
 if [ -n "`/sbin/lsmod | grep kvm_intel`" ]; then
 	add_module "kvm_intel"

@@ -27,12 +27,11 @@
 Checking your system...
 
 WARNING: You have no quirks!
-WARNING: iwl3945 is broken for suspend - snapshots from git work much better.
 WARNING: KVM will not suspend in kernels less than 2.6.23.
 
 Suggestions:
 
-Add 'SUSPEND_MODULES="kvm_intel kvm iwl3945"' to /etc/pm/config.d/unload_modules!
+Add 'SUSPEND_MODULES="kvm_intel kvm"' to /etc/pm/config.d/unload_modules!
 
 You might want to try the following pm-suspend entries:
 pm-suspend --quirk-s3-bios --quirk-s3-mode
