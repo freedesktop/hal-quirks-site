@@ -123,12 +123,18 @@ We can then add the following fdi segment:
       &lt;/match&gt;
 </pre>
 <p>
-Then restart HAL:
+Then restart HAL using either:
 </p>
 <pre>
 [root@localhost ~]# /sbin/service haldaemon restart
 Stopping HAL daemon:                                       [<font color="green">  OK  </font>]
 Starting HAL daemon:                                       [<font color="green">  OK  </font>]
+</pre>
+<p>
+or:
+</p>
+<pre>
+sudo /etc/init.d/hal restart
 </pre>
 <p>
 To check the quirk has been detected and is present you can do:

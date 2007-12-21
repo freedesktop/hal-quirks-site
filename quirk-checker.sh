@@ -76,7 +76,7 @@ fi
 
 #check kernel capabilities
 if [ -n "`uname -r | grep 3194`" ]; then
-	abort "Do not use the default Fedora GOLD kernel. It's broken. Use a kernel from updates!"
+	abort "Do not use the default Fedora 7 GOLD kernel. It's broken. Use a kernel from updates!"
 fi
 if [ -n "`uname -r | grep xen`" ]; then
 	abort "Do not use a XEN kernel. It will not suspend!"
