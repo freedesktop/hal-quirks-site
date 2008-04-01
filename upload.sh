@@ -1,2 +1,2 @@
-scp -r * hughsient@people.freedesktop.org:public_html/quirk/
+scp -r * hughsient@people.freedesktop.org:/srv/hal.freedesktop.org/www/quirk/
 
